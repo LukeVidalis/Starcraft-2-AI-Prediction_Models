@@ -1,4 +1,4 @@
-#from pysc2.lib import features, point
+from pysc2.lib import features, actions
 #from absl import app, flags
 #from pysc2.env.environment import TimeStep, StepType
 #from pysc2 import run_configs
@@ -17,6 +17,8 @@ import six
 from pysc2 import maps
 from pysc2 import run_configs
 from pysc2.env import sc2_env
+from pysc2.env.sc2_env import Dimensions
+from pysc2.env.environment import TimeStep, StepType
 from pysc2.lib import point_flag
 from pysc2.lib import renderer_human
 from pysc2.lib import stopwatch
@@ -26,12 +28,13 @@ from PIL import Image
 
 from s2clientprotocol import sc2api_pb2 as sc_pb
 import importlib
+from ObserverAgent import ObserverAgent as agent
 
 FLAGS = flags.FLAGS
 #flags.DEFINE_string("replay", None, "Path to a replay file.")
-flags.DEFINE_string("agent", None, "Path to an agent.")
+#flags.DEFINE_string("agent", None, "Path to an agent.")
 #flags.mark_flag_as_required("replay")
-flags.mark_flag_as_required("agent")
+#flags.mark_flag_as_required("agent")
 flags.DEFINE_bool("render", True, "Whether to render with pygame.")
 flags.DEFINE_bool("realtime", False, "Whether to run in realtime mode.")
 flags.DEFINE_bool("full_screen", False, "Whether to run full screen.")
@@ -77,9 +80,6 @@ def main(unused):
     #stopwatch.sw.enabled = FLAGS.profile or FLAGS.trace
     #stopwatch.sw.trace = FLAGS.trace
 
-    if (FLAGS.map and FLAGS.replay) or (not FLAGS.map and not FLAGS.replay):
-        sys.exit("Must supply either a map or replay.")
-
     if FLAGS.replay and not FLAGS.replay.lower().endswith("sc2replay"):
         sys.exit("Replay must end in .SC2Replay.")
 
@@ -112,7 +112,7 @@ def main(unused):
 
     max_episode_steps = FLAGS.max_episode_steps
 
-    replay_data = run_config.replay_data(FLAGS.replay)
+    replay_data = run_config.replay_data("2.SC2Replay")
     start_replay = sc_pb.RequestStartReplay(
         replay_data=replay_data,
         options=interface,
@@ -120,7 +120,9 @@ def main(unused):
         observed_player_id=FLAGS.observed_player)
     version = get_replay_version(replay_data)
 
-
+    step_mul = 1
+    discount = 1
+    _episode_steps = 0
     with run_config.start(version=version,
                       full_screen=FLAGS.full_screen) as controller:
         info = controller.replay_info(replay_data)
@@ -132,23 +134,34 @@ def main(unused):
             start_replay.map_data = run_config.map_data(map_path)
         controller.start_replay(start_replay)
 
-        
-        _features = features.features_from_game_info(controller.game_info())
+        #agent_interface = features.AgentInterfaceFormat([64,64], 2)
+
+        rgb_dimensions = {124, 124}
+        action_space = actions.ActionSpace.RGB
+
+        #agent_interface = features.AgentInterfaceFormat(sc2_env.Dimensions(screen=64, minimap=64), actions.spatial(None, actions.ActionSpace.RGB))
+        interface = features.AgentInterfaceFormat(rgb_dimensions=Dimensions(64,64))
+        _features = features.Features(interface)
+        #_features = features.features_from_game_info(controller.game_info())
+
         while True:
-            controller.step(self.step_mul)
+            controller.step(step_mul)
             obs = controller.observe()
+            #agent_obs = features.transform_obs(obs)
             try:
                 agent_obs = _features.transform_obs(obs)
             except:
                 pass
 
+            _state = StepType.FIRST
+
             if obs.player_result:  # Episide over.
                 _state = StepType.LAST
                 discount = 0
             else:
-                discount = self.discount
+                discount = discount
 
-            _episode_steps += self.step_mul
+            _episode_steps += step_mul
 
             step = TimeStep(step_type=_state, reward=0,
                             discount=discount, observation=agent_obs)
@@ -158,7 +171,7 @@ def main(unused):
             if obs.player_result:
                 break
 
-            self._state = StepType.MID
+            _state = StepType.MID
 
 
 
