@@ -1,10 +1,18 @@
-from PIL import Image
+#from PIL import Image
 from pysc2.env.environment import StepType
+from pysc2.lib import features
 
 
 class ObserverAgent():
-    def step(self, time_step):
-        print("{}")#.format(time_step.observation["game_loop"]))
+    def step(self, obs):
+        #print("{}")#.format(time_step.observation["game_loop"]))
+        #print(obs.observation_spec().obs_spec)
+        #minimap = obs.observation["minimap"]
+        print(obs)
+        #_features = features.Feature
+        #unpack = _features.unpack(self, obs)
+        #image = _features.unpack_rgb_image()
+        #print(image)
 
 
 
