@@ -1,33 +1,22 @@
 from pysc2.lib import features, actions
-# from absl import app, flags
-# from pysc2.env.environment import TimeStep, StepType
-# from pysc2 import run_configs
-# from s2clientprotocol import sc2api_pb2 as sc_pb
-
+from os import listdir
+from os.path import isfile, join
 import getpass
 import json
 import platform
 import sys
-import time
-
+import os
 from absl import app
 from absl import flags
 import mpyq
 import six
-from pysc2 import maps
 from pysc2 import run_configs
 from pysc2.env import sc2_env
 from pysc2.env.sc2_env import Dimensions
 from pysc2.env.environment import TimeStep, StepType
 from pysc2.lib import point_flag
-from pysc2.lib import renderer_human
-from pysc2.lib import stopwatch
 from pysc2.run_configs import lib as run_configs_lib
-
-# from PIL import Image
-
 from s2clientprotocol import sc2api_pb2 as sc_pb
-import importlib
 from ObserverAgent import ObserverAgent as agent
 
 FLAGS = flags.FLAGS
@@ -46,9 +35,9 @@ point_flag.DEFINE_point("feature_screen_size", "84",
                         "Resolution for screen feature layers.")
 point_flag.DEFINE_point("feature_minimap_size", "64",
                         "Resolution for minimap feature layers.")
-point_flag.DEFINE_point("rgb_screen_size", "256,192",
+point_flag.DEFINE_point("rgb_screen_size", "800,600",
                         "Resolution for rendered screen.")
-point_flag.DEFINE_point("rgb_minimap_size", "128",
+point_flag.DEFINE_point("rgb_minimap_size", "512",
                         "Resolution for rendered minimap.")
 flags.DEFINE_string("video", None, "Path to render a video of observations.")
 
@@ -64,7 +53,7 @@ flags.DEFINE_enum("bot_race", "random", sc2_env.Race._member_names_,  # pylint: 
 flags.DEFINE_enum("difficulty", "very_easy", sc2_env.Difficulty._member_names_,  # pylint: disable=protected-access
                   "Bot's strength.")
 flags.DEFINE_bool("disable_fog", False, "Disable fog of war.")
-flags.DEFINE_integer("observed_player", 1, "Which player to observe.")
+flags.DEFINE_integer("observed_player", 0, "Which player to observe.")
 
 flags.DEFINE_bool("profile", False, "Whether to turn on code profiling.")
 flags.DEFINE_bool("trace", False, "Whether to trace the code execution.")
@@ -78,8 +67,15 @@ flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
 
 def main(unused):
-    # stopwatch.sw.enabled = FLAGS.profile or FLAGS.trace
-    # stopwatch.sw.trace = FLAGS.trace
+    PROJ_DIR = "C:\\Users\\Lucas\\Desktop\\Replays\\Abyssal_Reef_LE_(141)"
+    onlyfiles = [f for f in listdir(PROJ_DIR) if isfile(join(PROJ_DIR, f))]
+    print(onlyfiles)
+    for filename in onlyfiles:
+        path=PROJ_DIR+"\\"+filename
+        load_replay(path)
+
+
+def load_replay(path):
 
     if FLAGS.replay and not FLAGS.replay.lower().endswith("sc2replay"):
         sys.exit("Replay must end in .SC2Replay.")
@@ -112,7 +108,7 @@ def main(unused):
 
     max_episode_steps = FLAGS.max_episode_steps
 
-    replay_data = run_config.replay_data("1.SC2Replay")
+    replay_data = run_config.replay_data(path)
     start_replay = sc_pb.RequestStartReplay(
         replay_data=replay_data,
         options=interface,
@@ -124,7 +120,7 @@ def main(unused):
     discount = 1
     _episode_steps = 0
     with run_config.start(version=version,
-                      full_screen=FLAGS.full_screen) as controller:
+                          full_screen=FLAGS.full_screen) as controller:
         info = controller.replay_info(replay_data)
         print(" Replay info ".center(60, "-"))
         print(info)
@@ -173,7 +169,6 @@ def main(unused):
                 break
 
             _state = StepType.MID
-
 
 
 def get_replay_version(replay_data):

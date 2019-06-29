@@ -16,7 +16,7 @@ class ObserverAgent:
         PROJ_DIR = os.path.dirname(os.path.abspath(__file__))
         # img = Image.fromarray(array)
         # img.save('testrgb.png')
-        Image.fromarray((minimap).astype('uint8') * 255).save(PROJ_DIR+'\Frames\minimap'+str(game_step)+'.png')
+        Image.fromarray((minimap).astype('uint8')).save(PROJ_DIR+'\Frames\minimap'+str(game_step)+'.png')
 
 
         """
