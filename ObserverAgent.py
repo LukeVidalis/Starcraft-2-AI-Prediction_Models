@@ -7,7 +7,8 @@ numpy.set_printoptions(threshold=sys.maxsize)
 
 
 class ObserverAgent:
-    def step(self, obs):
+    def step(self, obs, filename):
+        file=filename[:-10]
         print(self.observation["rgb_minimap"])
 
 
@@ -16,7 +17,7 @@ class ObserverAgent:
         PROJ_DIR = os.path.dirname(os.path.abspath(__file__))
         # img = Image.fromarray(array)
         # img.save('testrgb.png')
-        Image.fromarray((minimap).astype('uint8')).save(PROJ_DIR+'\Frames\minimap'+str(game_step)+'.png')
+        Image.fromarray((minimap).astype('uint8')).save(PROJ_DIR+'\Frames\\'+file+'_frame_'+str(game_step)+'.png')
 
 
         """

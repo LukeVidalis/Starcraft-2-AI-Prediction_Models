@@ -67,16 +67,15 @@ flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
 
 def main(unused):
-    PROJ_DIR = "C:\\Users\\Lucas\\Desktop\\Replays\\Abyssal_Reef_LE_(141)"
-    onlyfiles = [f for f in listdir(PROJ_DIR) if isfile(join(PROJ_DIR, f))]
+    proj_dir = "C:\\Users\\Lucas\\Desktop\\Replays\\Abyssal_Reef_LE_(141)"
+    onlyfiles = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
     print(onlyfiles)
     for filename in onlyfiles:
-        path=PROJ_DIR+"\\"+filename
-        load_replay(path)
+        load_replay(proj_dir, filename)
 
 
-def load_replay(path):
-
+def load_replay(proj_dir, filename):
+    path = proj_dir + "\\" + filename
     if FLAGS.replay and not FLAGS.replay.lower().endswith("sc2replay"):
         sys.exit("Replay must end in .SC2Replay.")
 
@@ -163,7 +162,7 @@ def load_replay(path):
             step = TimeStep(step_type=_state, reward=0,
                             discount=discount, observation=agent_obs)
 
-            agent.step(step, obs)
+            agent.step(step, obs, filename)
 
             if obs.player_result:
                 break
