@@ -1,8 +1,8 @@
 from pysc2.lib import features, actions
-#from absl import app, flags
-#from pysc2.env.environment import TimeStep, StepType
-#from pysc2 import run_configs
-#from s2clientprotocol import sc2api_pb2 as sc_pb
+# from absl import app, flags
+# from pysc2.env.environment import TimeStep, StepType
+# from pysc2 import run_configs
+# from s2clientprotocol import sc2api_pb2 as sc_pb
 
 import getpass
 import json
@@ -24,17 +24,17 @@ from pysc2.lib import renderer_human
 from pysc2.lib import stopwatch
 from pysc2.run_configs import lib as run_configs_lib
 
-from PIL import Image
+# from PIL import Image
 
 from s2clientprotocol import sc2api_pb2 as sc_pb
 import importlib
 from ObserverAgent import ObserverAgent as agent
 
 FLAGS = flags.FLAGS
-#flags.DEFINE_string("replay", None, "Path to a replay file.")
-#flags.DEFINE_string("agent", None, "Path to an agent.")
-#flags.mark_flag_as_required("replay")
-#flags.mark_flag_as_required("agent")
+# flags.DEFINE_string("replay", None, "Path to a replay file.")
+# flags.DEFINE_string("agent", None, "Path to an agent.")
+# flags.mark_flag_as_required("replay")
+# flags.mark_flag_as_required("agent")
 flags.DEFINE_bool("render", True, "Whether to render with pygame.")
 flags.DEFINE_bool("realtime", False, "Whether to run in realtime mode.")
 flags.DEFINE_bool("full_screen", False, "Whether to run full screen.")
@@ -76,15 +76,15 @@ flags.DEFINE_string("map", None, "Name of a map to use to play.")
 flags.DEFINE_string("map_path", None, "Override the map for this replay.")
 flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
+
 def main(unused):
-    #stopwatch.sw.enabled = FLAGS.profile or FLAGS.trace
-    #stopwatch.sw.trace = FLAGS.trace
+    # stopwatch.sw.enabled = FLAGS.profile or FLAGS.trace
+    # stopwatch.sw.trace = FLAGS.trace
 
     if FLAGS.replay and not FLAGS.replay.lower().endswith("sc2replay"):
         sys.exit("Replay must end in .SC2Replay.")
 
     if FLAGS.realtime and FLAGS.replay:
-        # TODO(tewalds): Support realtime in replays once the game supports it.
         sys.exit("realtime isn't possible for replays yet.")
 
     if FLAGS.render and (FLAGS.realtime or FLAGS.full_screen):
@@ -112,7 +112,7 @@ def main(unused):
 
     max_episode_steps = FLAGS.max_episode_steps
 
-    replay_data = run_config.replay_data("2.SC2Replay")
+    replay_data = run_config.replay_data("1.SC2Replay")
     start_replay = sc_pb.RequestStartReplay(
         replay_data=replay_data,
         options=interface,
@@ -134,28 +134,29 @@ def main(unused):
             start_replay.map_data = run_config.map_data(map_path)
         controller.start_replay(start_replay)
 
-        #agent_interface = features.AgentInterfaceFormat([64,64], 2)
+        # agent_interface = features.AgentInterfaceFormat([64,64], 2)
 
         rgb_dimensions = {124, 124}
         action_space = actions.ActionSpace.RGB
 
-        #agent_interface = features.AgentInterfaceFormat(sc2_env.Dimensions(screen=64, minimap=64), actions.spatial(None, actions.ActionSpace.RGB))
-        interface = features.AgentInterfaceFormat(rgb_dimensions=Dimensions(64,64))
+        # agent_interface = features.AgentInterfaceFormat(sc2_env.Dimensions(screen=64, minimap=64),
+        # actions.spatial(None, actions.ActionSpace.RGB))
+        interface = features.AgentInterfaceFormat(rgb_dimensions=Dimensions(64, 64))
         _features = features.Features(interface)
-        #_features = features.features_from_game_info(controller.game_info())
+        # features = features.features_from_game_info(controller.game_info())
 
         while True:
             controller.step(step_mul)
             obs = controller.observe()
-            #agent_obs = features.transform_obs(obs)
+            # agent_obs = features.transform_obs(obs)
             try:
                 agent_obs = _features.transform_obs(obs)
             except:
                 pass
 
-            _state = StepType.FIRST
+            _state = StepType.MID
 
-            if obs.player_result:  # Episide over.
+            if obs.player_result:
                 _state = StepType.LAST
                 discount = 0
             else:
@@ -166,7 +167,7 @@ def main(unused):
             step = TimeStep(step_type=_state, reward=0,
                             discount=discount, observation=agent_obs)
 
-            agent.step(step, obs.actions)
+            agent.step(step, obs)
 
             if obs.player_result:
                 break
@@ -175,16 +176,13 @@ def main(unused):
 
 
 
-def step():
-    print("helouhiuhilhuiuphih")
-
 def get_replay_version(replay_data):
-  replay_io = six.BytesIO()
-  replay_io.write(replay_data)
-  replay_io.seek(0)
-  archive = mpyq.MPQArchive(replay_io).extract()
-  metadata = json.loads(archive[b"replay.gamemetadata.json"].decode("utf-8"))
-  return run_configs_lib.Version(
+    replay_io = six.BytesIO()
+    replay_io.write(replay_data)
+    replay_io.seek(0)
+    archive = mpyq.MPQArchive(replay_io).extract()
+    metadata = json.loads(archive[b"replay.gamemetadata.json"].decode("utf-8"))
+    return run_configs_lib.Version(
       game_version=".".join(metadata["GameVersion"].split(".")[:-1]),
       build_version=int(metadata["BaseBuild"][4:]),
       data_version=metadata.get("DataVersion"),  # Only in replays version 4.1+.
@@ -192,8 +190,8 @@ def get_replay_version(replay_data):
 
 
 def entry_point():  # Needed so setup.py scripts work.
-  app.run(main)
+    app.run(main)
 
 
 if __name__ == "__main__":
-  app.run(main)
+    app.run(main)
