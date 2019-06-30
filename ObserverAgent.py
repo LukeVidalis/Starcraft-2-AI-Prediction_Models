@@ -1,28 +1,19 @@
 from PIL import Image
-from pysc2.env.environment import StepType
-import sys
+# import sys
 import os
-import numpy
-numpy.set_printoptions(threshold=sys.maxsize)
-
+# import numpy
+# numpy.set_printoptions(threshold=sys.maxsize)
 
 class ObserverAgent:
+
     def step(self, obs, filename):
-        file=filename[:-10]
-        print(self.observation["rgb_minimap"])
+        # file = filename[:-10]
+        # print(self.observation["rgb_minimap"])
 
-
-        game_step = self.observation["game_loop"][0]
+        # game_step = self.observation["game_loop"][0]
         minimap = self.observation["rgb_minimap"]
-        PROJ_DIR = os.path.dirname(os.path.abspath(__file__))
-        # img = Image.fromarray(array)
-        # img.save('testrgb.png')
-        Image.fromarray((minimap).astype('uint8')).save(PROJ_DIR+'\Frames\\'+file+'_frame_'+str(game_step)+'.png')
+        # proj_dir = os.path.dirname(os.path.abspath(__file__))
+        # Image.fromarray(minimap.astype('uint8')).save(proj_dir+'\\Frames\\'+file+'_frame_'+str(game_step)+'.png')
 
+        return minimap
 
-        """
-        super(ReplayObserver, self).step(obs)
-
-        if obs.step_type != StepType.FIRST:
-            minimap = obs.observation['minimap']
-            Image.fromarray((minimap[3] > 0).astype('uint8') * 255).save('~/{}_minimap.png')"""

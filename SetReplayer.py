@@ -1,3 +1,4 @@
+import pysc2
 from pysc2.lib import features, actions
 from os import listdir
 from os.path import isfile, join
@@ -5,7 +6,7 @@ import getpass
 import json
 import platform
 import sys
-import os
+import csv
 from absl import app
 from absl import flags
 import mpyq
@@ -37,7 +38,7 @@ point_flag.DEFINE_point("feature_minimap_size", "64",
                         "Resolution for minimap feature layers.")
 point_flag.DEFINE_point("rgb_screen_size", "800,600",
                         "Resolution for rendered screen.")
-point_flag.DEFINE_point("rgb_minimap_size", "512",
+point_flag.DEFINE_point("rgb_minimap_size", "128",
                         "Resolution for rendered minimap.")
 flags.DEFINE_string("video", None, "Path to render a video of observations.")
 
@@ -67,14 +68,29 @@ flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
 
 def main(unused):
-    proj_dir = "C:\\Users\\Lucas\\Desktop\\Replays\\Abyssal_Reef_LE_(141)"
+    proj_dir = "D:\\Starcraft 2 AI\\Replays\\Abyssal_Reef_LE_(141)"
     onlyfiles = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
-    print(onlyfiles)
+    # print(onlyfiles)
     for filename in onlyfiles:
-        load_replay(proj_dir, filename)
+        try:
+            image_list = load_replay(proj_dir, filename)
+
+            with open(filename+".csv", 'w+', newline='') as myfile:
+                csvWriter = csv.writer(myfile, delimiter=',')
+                csvWriter.writerows(image_list)
+            break
+        except pysc2.lib.remote_controller.RequestError:
+            print("Oops!", sys.exc_info()[0], "occured.")
+            print("Next entry.")
+            print()
+        except ValueError:
+            print("Oops!", sys.exc_info()[0], "occured.")
+            print("Next entry.")
+            print()
 
 
 def load_replay(proj_dir, filename):
+
     path = proj_dir + "\\" + filename
     if FLAGS.replay and not FLAGS.replay.lower().endswith("sc2replay"):
         sys.exit("Replay must end in .SC2Replay.")
@@ -115,7 +131,7 @@ def load_replay(proj_dir, filename):
         observed_player_id=FLAGS.observed_player)
     version = get_replay_version(replay_data)
 
-    step_mul = 1
+    step_mul = 30
     discount = 1
     _episode_steps = 0
     with run_config.start(version=version,
@@ -139,7 +155,7 @@ def load_replay(proj_dir, filename):
         interface = features.AgentInterfaceFormat(rgb_dimensions=Dimensions(64, 64))
         _features = features.Features(interface)
         # features = features.features_from_game_info(controller.game_info())
-
+        minimap = []
         while True:
             controller.step(step_mul)
             obs = controller.observe()
@@ -162,12 +178,14 @@ def load_replay(proj_dir, filename):
             step = TimeStep(step_type=_state, reward=0,
                             discount=discount, observation=agent_obs)
 
-            agent.step(step, obs, filename)
+            # minimap.append(agent.step(step, obs, filename))
+            minimap.append(step.observation["rgb_minimap"])
 
             if obs.player_result:
                 break
 
             _state = StepType.MID
+    return minimap
 
 
 def get_replay_version(replay_data):
