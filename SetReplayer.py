@@ -3,6 +3,7 @@ from pysc2.lib import features, actions, point_flag
 from os import listdir
 from os.path import isfile, join
 import getpass
+import datetime
 import json
 import platform
 import sys
@@ -66,6 +67,7 @@ def set_flags():
 
 def main(unused):
     set_flags()
+    log_init()
     proj_dir = "D:\\Starcraft 2 AI\\Replays\\Abyssal_Reef_LE_(141)"
     file_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
     # print(file_list)
@@ -78,10 +80,12 @@ def main(unused):
         except pysc2.lib.remote_controller.RequestError:
             print("Oops!", sys.exc_info()[0], "occurred.")
             print("Next entry.")
+            log_error(sys.exc_info()[0], filename)
             print()
         except ValueError:
             print("Oops!", sys.exc_info()[0], "occurred.")
             print("Next entry.")
+            log_error(sys.exc_info()[0], filename)
             print()
 
 
@@ -92,6 +96,19 @@ def create_images(minimap_list, filename):
         proj_dir = os.path.dirname(os.path.abspath(__file__))
         Image.fromarray(entry.astype('uint8')).save(proj_dir+'\\Frames\\'+file+'_frame_'+str(i)+'.png')
         i = i + 1
+
+
+def log_error(code, filename):
+    file1 = open("error_log.txt", "a")  # append mode
+    file1.write(filename + " was not completed. Error: "+str(code)+"\n")
+    file1.close()
+
+
+def log_init():
+    file1 = open("error_log.txt", "a")  # append mode
+    file1.write("Error Log".center(60, "-"))
+    file1.write("\nProcess Started at: "+str(datetime.datetime.now())+"\n")
+    file1.close()
 
 
 def load_replay(proj_dir, filename):
