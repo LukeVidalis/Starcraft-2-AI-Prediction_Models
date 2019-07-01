@@ -7,9 +7,6 @@ import os
 class ObserverAgent:
 
     def step(self, obs, filename):
-        # file = filename[:-10]
-        # print(self.observation["rgb_minimap"])
-
         # game_step = self.observation["game_loop"][0]
         minimap = self.observation["rgb_minimap"]
         # proj_dir = os.path.dirname(os.path.abspath(__file__))

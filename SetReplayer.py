@@ -6,7 +6,9 @@ import getpass
 import json
 import platform
 import sys
-import csv
+import os
+from PIL import Image
+import pandas as pd
 from absl import app
 from absl import flags
 import mpyq
@@ -69,24 +71,32 @@ flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
 def main(unused):
     proj_dir = "D:\\Starcraft 2 AI\\Replays\\Abyssal_Reef_LE_(141)"
-    onlyfiles = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
-    # print(onlyfiles)
-    for filename in onlyfiles:
+    file_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
+    # print(file_list)
+    for filename in file_list:
         try:
-            image_list = load_replay(proj_dir, filename)
 
-            with open(filename+".csv", 'w+', newline='') as myfile:
-                csvWriter = csv.writer(myfile, delimiter=',')
-                csvWriter.writerows(image_list)
+            image_list = load_replay(proj_dir, filename)
+            create_images(image_list, filename)
+
             break
         except pysc2.lib.remote_controller.RequestError:
-            print("Oops!", sys.exc_info()[0], "occured.")
+            print("Oops!", sys.exc_info()[0], "occurred.")
             print("Next entry.")
             print()
         except ValueError:
-            print("Oops!", sys.exc_info()[0], "occured.")
+            print("Oops!", sys.exc_info()[0], "occurred.")
             print("Next entry.")
             print()
+
+
+def create_images(minimap_list, filename):
+    i = 0
+    file = filename[:-10]
+    for entry in minimap_list:
+        proj_dir = os.path.dirname(os.path.abspath(__file__))
+        Image.fromarray(entry.astype('uint8')).save(proj_dir+'\\Frames\\'+file+'_frame_'+str(i)+'.png')
+        i = i + 1
 
 
 def load_replay(proj_dir, filename):
