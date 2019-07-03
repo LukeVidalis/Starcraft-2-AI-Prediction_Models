@@ -68,7 +68,7 @@ def set_flags():
 def main(unused):
     set_flags()
     log_init()
-    proj_dir = "D:\\Starcraft 2 AI\\Replays\\Abyssal_Reef_LE_(141)"
+    proj_dir = "D:\\Starcraft 2 AI\\New Replays\\Acid Plant"
     file_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
     # print(file_list)
     for filename in file_list:
@@ -76,22 +76,27 @@ def main(unused):
             image_list = load_replay(proj_dir, filename)
             create_images(image_list, filename)
         except pysc2.lib.remote_controller.RequestError:
-            print("Oops!", sys.exc_info()[0], "occurred.")
+            print("Oops!", sys.exc_info(), "occurred.")
             print("Next entry.")
             log_error(sys.exc_info()[0], filename)
             print()
         except pysc2.lib.sc_process.SC2LaunchError:
-            print(sys.exc_info()[0])
-            log_error(sys.exc_info()[0], filename)
+            print(sys.exc_info())
+            error = str(sys.exc_info()[1])
+            error = "Missing Base: "+error[49:58]
+            print(error)
+            log_error(error, filename)
             print()
         except UnboundLocalError:
-            print(sys.exc_info()[0])
+            print(sys.exc_info())
             log_error(sys.exc_info()[0], filename)
             print()
         except ValueError:
-            print("Oops!", sys.exc_info()[0], "occurred.")
+            print("Oops!", sys.exc_info(), "occurred.")
+            error = str(sys.exc_info()[1])
+            error = error[:29]
             print("Next entry.")
-            log_error(sys.exc_info()[0], filename)
+            log_error(error, filename)
             print()
 
 
