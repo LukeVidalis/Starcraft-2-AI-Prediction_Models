@@ -1,6 +1,6 @@
 import keras
-from keras.models import Model
-from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Conv2DTranspose, Dropout
+from keras.models import Model, Sequential
+from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Dropout, MaxPooling2D, Activation
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
 from keras.utils import plot_model
@@ -9,13 +9,19 @@ import os
 
 img_width = 128
 img_height = 128
-smooth = 1
+rgb = 3
 
-def create_conv_layer(features, stride, activationfn, padding, prevLayer, dropout):
+model = Sequential()
 
-    conv_layer = Conv2D(features, stride, activation=activationfn, padding=padding)(prevLayer)
-    conv_layer = Dropout(dropout)(conv_layer)
-    conv_layer = Conv2D(features, stride, activation=activationfn, padding=padding)(conv_layer)
+model.add(Conv2D(64, (3, 3), padding="same", input_shape=(128, 128, 3)))
+model.add(Activation("relu"))
 
-    return conv_layer
+model.add(Conv2D(32, (3, 3)))
+model.add(Activation("relu"))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+
+
+
 
