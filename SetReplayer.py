@@ -75,11 +75,17 @@ def main(unused):
         try:
             image_list = load_replay(proj_dir, filename)
             create_images(image_list, filename)
-
-            break
         except pysc2.lib.remote_controller.RequestError:
             print("Oops!", sys.exc_info()[0], "occurred.")
             print("Next entry.")
+            log_error(sys.exc_info()[0], filename)
+            print()
+        except pysc2.lib.sc_process.SC2LaunchError:
+            print(sys.exc_info()[0])
+            log_error(sys.exc_info()[0], filename)
+            print()
+        except UnboundLocalError:
+            print(sys.exc_info()[0])
             log_error(sys.exc_info()[0], filename)
             print()
         except ValueError:
@@ -153,7 +159,7 @@ def load_replay(proj_dir, filename):
         observed_player_id=FLAGS.observed_player)
     version = get_replay_version(replay_data)
 
-    step_mul = 30
+    step_mul = 5
     discount = 1
     _episode_steps = 0
     with run_config.start(version=version,
