@@ -3,14 +3,16 @@ import os
 
 # Function to rename multiple files
 def main():
-    i = 0
-    dir = "C:\\Users\\Lucas\\Desktop\\Replays\\Acid_Plant_(139)\\"
-    for filename in os.listdir(dir):
-        dst = "Acid_Plant_" + str(i) + ".SC2Replay"
-        src = dir + filename
-        dst = dir + dst
-        os.rename(src, dst)
-        i += 1
+    main_dir = "D:\\Starcraft 2 AI\\New Replays\\"
+    for r in os.listdir(main_dir):
+        i = 0
+        replay_dir = main_dir+r+"\\"
+        for filename in os.listdir(replay_dir):
+            dst = r+"_" + str(i) + ".SC2Replay"
+            src = replay_dir + filename
+            dst = replay_dir + dst
+            os.rename(src, dst)
+            i += 1
 
 
 # Driver Code
