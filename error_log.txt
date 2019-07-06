@@ -1,1 +1,563 @@
-﻿
+﻿-------------------------Error Log--------------------------
+Process Started at: 2019-07-04 19:46:38.172929
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-04 20:04:42.091897
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-05 01:47:28.359140
+Acid_Plant_102.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_103.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_104.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_106.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_107.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_108.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_109.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_11.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_110.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_111.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_112.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_113.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_114.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_115.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_116.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_117.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_118.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_119.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_12.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_120.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_121.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_122.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_123.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_124.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_125.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_126.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_127.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_128.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_129.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_13.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_130.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_131.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_132.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_133.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_134.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_135.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_136.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_137.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_138.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_139.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_14.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_140.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_141.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_15.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_21.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_22.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_23.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_24.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_25.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_26.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_27.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_28.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_29.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_3.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_30.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_31.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_32.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_33.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_34.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_35.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_36.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_37.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_38.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_39.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_4.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_40.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_41.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_42.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_43.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_44.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_45.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_46.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_47.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_48.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_49.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_5.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_50.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_51.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_52.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_53.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_54.SC2Replay was not completed. Error: Invalid file header.
+Acid_Plant_55.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_56.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_57.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_58.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_59.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_6.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_60.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_61.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_62.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_63.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_64.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_65.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_66.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_67.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_68.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_69.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_7.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_70.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_71.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_72.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_73.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_74.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_75.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_76.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_77.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_78.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_79.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_8.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_80.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_81.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_82.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_83.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_84.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_85.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_86.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_87.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_88.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_89.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_9.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_90.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_91.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_92.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_93.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_94.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_95.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_96.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_97.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_98.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_99.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-05 17:39:55.841636
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-05 17:53:41.566438
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-05 17:56:45.458556
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-05 17:58:22.064439
+Acid_Plant_112.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_126.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_128.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-05 19:50:00.644758
+Acid_Plant_15.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_21.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 12:27:31.713644
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 12:27:54.554270
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 12:31:20.289280
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 12:36:55.977202
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 12:44:20.078478
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 12:49:33.377629
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 13:00:11.679189
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 13:00:56.861928
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 13:33:40.436292
+Acid_Plant_102.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_104.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_105.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_106.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_107.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_108.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_109.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_11.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_110.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_111.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_113.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_114.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_115.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_116.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_117.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_118.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_119.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_12.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_120.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_121.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_122.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_123.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_124.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_125.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_127.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_129.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_13.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_130.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_131.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_132.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_133.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_134.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_135.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_136.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_137.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_138.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_139.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_141.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_16.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_17.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_18.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_19.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_2.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_20.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_22.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_24.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_25.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_26.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_27.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_28.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_29.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_3.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_30.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_31.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_32.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_33.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_34.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_35.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_36.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_37.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_38.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_39.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_4.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_40.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 14:21:09.468636
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 14:22:02.456172
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 14:23:02.586160
+Acid_Plant_107.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_108.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_109.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_11.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_110.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_111.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_113.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_114.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_115.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_116.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_117.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_118.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_119.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_12.SC2Replay was not completed. Error: 
+Acid_Plant_120.SC2Replay was not completed. Error: 
+Acid_Plant_121.SC2Replay was not completed. Error: 
+Acid_Plant_122.SC2Replay was not completed. Error: 
+Acid_Plant_123.SC2Replay was not completed. Error: 
+Acid_Plant_124.SC2Replay was not completed. Error: 
+Acid_Plant_125.SC2Replay was not completed. Error: 
+Acid_Plant_127.SC2Replay was not completed. Error: 
+Acid_Plant_129.SC2Replay was not completed. Error: 
+Acid_Plant_13.SC2Replay was not completed. Error: 
+Acid_Plant_130.SC2Replay was not completed. Error: 
+Acid_Plant_131.SC2Replay was not completed. Error: 
+Acid_Plant_132.SC2Replay was not completed. Error: 
+Acid_Plant_133.SC2Replay was not completed. Error: 
+Acid_Plant_134.SC2Replay was not completed. Error: 
+Acid_Plant_135.SC2Replay was not completed. Error: 
+Acid_Plant_136.SC2Replay was not completed. Error: 
+Acid_Plant_137.SC2Replay was not completed. Error: 
+Acid_Plant_138.SC2Replay was not completed. Error: 
+Acid_Plant_139.SC2Replay was not completed. Error: 
+Acid_Plant_141.SC2Replay was not completed. Error: 
+Acid_Plant_16.SC2Replay was not completed. Error: 
+Acid_Plant_17.SC2Replay was not completed. Error: 
+Acid_Plant_18.SC2Replay was not completed. Error: 
+Acid_Plant_19.SC2Replay was not completed. Error: 
+Acid_Plant_2.SC2Replay was not completed. Error: 
+Acid_Plant_20.SC2Replay was not completed. Error: 
+Acid_Plant_22.SC2Replay was not completed. Error: 
+Acid_Plant_24.SC2Replay was not completed. Error: 
+Acid_Plant_25.SC2Replay was not completed. Error: 
+Acid_Plant_26.SC2Replay was not completed. Error: 
+Acid_Plant_27.SC2Replay was not completed. Error: 
+Acid_Plant_29.SC2Replay was not completed. Error: 
+Acid_Plant_3.SC2Replay was not completed. Error: 
+Acid_Plant_30.SC2Replay was not completed. Error: 
+Acid_Plant_31.SC2Replay was not completed. Error: 
+Acid_Plant_33.SC2Replay was not completed. Error: 
+Acid_Plant_34.SC2Replay was not completed. Error: 
+Acid_Plant_35.SC2Replay was not completed. Error: 
+Acid_Plant_36.SC2Replay was not completed. Error: 
+Acid_Plant_37.SC2Replay was not completed. Error: 
+Acid_Plant_38.SC2Replay was not completed. Error: 
+Acid_Plant_39.SC2Replay was not completed. Error: 
+Acid_Plant_4.SC2Replay was not completed. Error: 
+Acid_Plant_40.SC2Replay was not completed. Error: 
+Acid_Plant_41.SC2Replay was not completed. Error: 
+Acid_Plant_42.SC2Replay was not completed. Error: 
+Acid_Plant_43.SC2Replay was not completed. Error: 
+Acid_Plant_44.SC2Replay was not completed. Error: 
+Acid_Plant_45.SC2Replay was not completed. Error: 
+Acid_Plant_46.SC2Replay was not completed. Error: 
+Acid_Plant_47.SC2Replay was not completed. Error: 
+Acid_Plant_48.SC2Replay was not completed. Error: 
+Acid_Plant_49.SC2Replay was not completed. Error: 
+Acid_Plant_5.SC2Replay was not completed. Error: 
+Acid_Plant_50.SC2Replay was not completed. Error: 
+Acid_Plant_51.SC2Replay was not completed. Error: 
+Acid_Plant_52.SC2Replay was not completed. Error: 
+Acid_Plant_53.SC2Replay was not completed. Error: 
+Acid_Plant_54.SC2Replay was not completed. Error: Invalid file header.
+Acid_Plant_55.SC2Replay was not completed. Error: 
+Acid_Plant_56.SC2Replay was not completed. Error: 
+Acid_Plant_57.SC2Replay was not completed. Error: 
+Acid_Plant_58.SC2Replay was not completed. Error: 
+Acid_Plant_59.SC2Replay was not completed. Error: 
+Acid_Plant_6.SC2Replay was not completed. Error: 
+Acid_Plant_60.SC2Replay was not completed. Error: 
+Acid_Plant_61.SC2Replay was not completed. Error: 
+Acid_Plant_62.SC2Replay was not completed. Error: 
+Acid_Plant_63.SC2Replay was not completed. Error: 
+Acid_Plant_64.SC2Replay was not completed. Error: 
+Acid_Plant_65.SC2Replay was not completed. Error: 
+Acid_Plant_66.SC2Replay was not completed. Error: 
+Acid_Plant_67.SC2Replay was not completed. Error: 
+Acid_Plant_68.SC2Replay was not completed. Error: 
+Acid_Plant_69.SC2Replay was not completed. Error: 
+Acid_Plant_7.SC2Replay was not completed. Error: 
+Acid_Plant_70.SC2Replay was not completed. Error: 
+Acid_Plant_71.SC2Replay was not completed. Error: 
+Acid_Plant_72.SC2Replay was not completed. Error: 
+Acid_Plant_73.SC2Replay was not completed. Error: 
+Acid_Plant_74.SC2Replay was not completed. Error: 
+Acid_Plant_75.SC2Replay was not completed. Error: 
+Acid_Plant_76.SC2Replay was not completed. Error: 
+Acid_Plant_77.SC2Replay was not completed. Error: 
+Acid_Plant_78.SC2Replay was not completed. Error: 
+Acid_Plant_79.SC2Replay was not completed. Error: 
+Acid_Plant_8.SC2Replay was not completed. Error: 
+Acid_Plant_80.SC2Replay was not completed. Error: 
+Acid_Plant_81.SC2Replay was not completed. Error: 
+Acid_Plant_82.SC2Replay was not completed. Error: 
+Acid_Plant_83.SC2Replay was not completed. Error: 
+Acid_Plant_84.SC2Replay was not completed. Error: 
+Acid_Plant_85.SC2Replay was not completed. Error: 
+Acid_Plant_86.SC2Replay was not completed. Error: 
+Acid_Plant_87.SC2Replay was not completed. Error: 
+Acid_Plant_88.SC2Replay was not completed. Error: 
+Acid_Plant_89.SC2Replay was not completed. Error: 
+Acid_Plant_9.SC2Replay was not completed. Error: 
+Acid_Plant_90.SC2Replay was not completed. Error: 
+Acid_Plant_91.SC2Replay was not completed. Error: 
+Acid_Plant_92.SC2Replay was not completed. Error: 
+Acid_Plant_93.SC2Replay was not completed. Error: 
+Acid_Plant_94.SC2Replay was not completed. Error: 
+Acid_Plant_95.SC2Replay was not completed. Error: 
+Acid_Plant_96.SC2Replay was not completed. Error: 
+Acid_Plant_97.SC2Replay was not completed. Error: 
+Acid_Plant_98.SC2Replay was not completed. Error: 
+Acid_Plant_99.SC2Replay was not completed. Error: 
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 15:20:28.483911
+Acid_Plant_110.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_111.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_114.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_115.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_116.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_117.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_118.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_119.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_12.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_120.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_121.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_122.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_123.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_124.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_125.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_127.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_129.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_13.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_130.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_131.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_132.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_133.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_134.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_135.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_136.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_137.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_138.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_139.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_141.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_16.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_17.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_18.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_19.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_2.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_20.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_22.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_24.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_25.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_26.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_27.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_29.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_33.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_35.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_36.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_37.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_38.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_39.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_4.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_40.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_41.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_42.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_43.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_44.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_45.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_46.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_47.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_48.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_49.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_5.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_50.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_51.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_52.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_53.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_54.SC2Replay was not completed. Error: Invalid file header.
+Acid_Plant_55.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_56.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_57.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_58.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_59.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_6.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Acid_Plant_60.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_61.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 16:07:44.222710
+Acid_Plant_110.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_111.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_114.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_115.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_116.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_117.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_118.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_119.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_12.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_120.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_122.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_123.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_124.SC2Replay was not completed. Error: <class 'pysc2.lib.protocol.ConnectionError'>
+Acid_Plant_125.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+Acid_Plant_127.SC2Replay was not completed. Error: <class 'UnboundLocalError'>
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 16:52:05.517610
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 17:21:59.851268
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-06 17:23:26.348883
+Acid_Plant_115.SC2Replay was not completed. Error: 
+Acid_Plant_116.SC2Replay was not completed. Error: 
+Acid_Plant_117.SC2Replay was not completed. Error: 
+Acid_Plant_118.SC2Replay was not completed. Error: 
+Acid_Plant_119.SC2Replay was not completed. Error: 
+Acid_Plant_12.SC2Replay was not completed. Error: 
+Acid_Plant_120.SC2Replay was not completed. Error: 
+Acid_Plant_122.SC2Replay was not completed. Error: 
+Acid_Plant_123.SC2Replay was not completed. Error: 
+Acid_Plant_124.SC2Replay was not completed. Error: 
+Acid_Plant_125.SC2Replay was not completed. Error: 
+Acid_Plant_127.SC2Replay was not completed. Error: 
+Acid_Plant_129.SC2Replay was not completed. Error: 
+Acid_Plant_13.SC2Replay was not completed. Error: 
+Acid_Plant_130.SC2Replay was not completed. Error: 
+Acid_Plant_131.SC2Replay was not completed. Error: 
+Acid_Plant_132.SC2Replay was not completed. Error: 
+Acid_Plant_133.SC2Replay was not completed. Error: 
+Acid_Plant_134.SC2Replay was not completed. Error: 
+Acid_Plant_135.SC2Replay was not completed. Error: 
+Acid_Plant_136.SC2Replay was not completed. Error: 
+Acid_Plant_137.SC2Replay was not completed. Error: 
+Acid_Plant_138.SC2Replay was not completed. Error: 
+Acid_Plant_139.SC2Replay was not completed. Error: 
+Acid_Plant_141.SC2Replay was not completed. Error: 
+Acid_Plant_16.SC2Replay was not completed. Error: 
+Acid_Plant_17.SC2Replay was not completed. Error: 
+Acid_Plant_18.SC2Replay was not completed. Error: 
+Acid_Plant_19.SC2Replay was not completed. Error: 
+Acid_Plant_2.SC2Replay was not completed. Error: 
+Acid_Plant_20.SC2Replay was not completed. Error: 
+Acid_Plant_22.SC2Replay was not completed. Error: 
+Acid_Plant_24.SC2Replay was not completed. Error: 
+Acid_Plant_25.SC2Replay was not completed. Error: 
+Acid_Plant_26.SC2Replay was not completed. Error: 
+Acid_Plant_27.SC2Replay was not completed. Error: 
+Acid_Plant_29.SC2Replay was not completed. Error: 
+Acid_Plant_33.SC2Replay was not completed. Error: 
+Acid_Plant_35.SC2Replay was not completed. Error: 
+Acid_Plant_36.SC2Replay was not completed. Error: 
+Acid_Plant_37.SC2Replay was not completed. Error: 
+Acid_Plant_38.SC2Replay was not completed. Error: 
+Acid_Plant_39.SC2Replay was not completed. Error: 
+Acid_Plant_4.SC2Replay was not completed. Error: 
+Acid_Plant_40.SC2Replay was not completed. Error: 
+Acid_Plant_41.SC2Replay was not completed. Error: 
+Acid_Plant_43.SC2Replay was not completed. Error: 
+Acid_Plant_44.SC2Replay was not completed. Error: 
+Acid_Plant_45.SC2Replay was not completed. Error: 
+Acid_Plant_46.SC2Replay was not completed. Error: 
+Acid_Plant_47.SC2Replay was not completed. Error: 
+Acid_Plant_48.SC2Replay was not completed. Error: 
+Acid_Plant_49.SC2Replay was not completed. Error: 
+Acid_Plant_50.SC2Replay was not completed. Error: 
+Acid_Plant_51.SC2Replay was not completed. Error: 
+Acid_Plant_52.SC2Replay was not completed. Error: 
+Acid_Plant_53.SC2Replay was not completed. Error: 
+Acid_Plant_54.SC2Replay was not completed. Error: Invalid file header.
+Acid_Plant_55.SC2Replay was not completed. Error: 
+Acid_Plant_56.SC2Replay was not completed. Error: 
+Acid_Plant_57.SC2Replay was not completed. Error: 
+Acid_Plant_6.SC2Replay was not completed. Error: 
+Acid_Plant_60.SC2Replay was not completed. Error: 
+Acid_Plant_61.SC2Replay was not completed. Error: 
+Acid_Plant_62.SC2Replay was not completed. Error: 
+Acid_Plant_63.SC2Replay was not completed. Error: 
+Acid_Plant_64.SC2Replay was not completed. Error: 
+Acid_Plant_65.SC2Replay was not completed. Error: 
+Acid_Plant_66.SC2Replay was not completed. Error: 
+Acid_Plant_67.SC2Replay was not completed. Error: 
+Acid_Plant_68.SC2Replay was not completed. Error: 
+Acid_Plant_69.SC2Replay was not completed. Error: 
+Acid_Plant_7.SC2Replay was not completed. Error: 
+Acid_Plant_70.SC2Replay was not completed. Error: 
+Acid_Plant_71.SC2Replay was not completed. Error: 
+Acid_Plant_72.SC2Replay was not completed. Error: 
+Acid_Plant_73.SC2Replay was not completed. Error: 
+Acid_Plant_74.SC2Replay was not completed. Error: 
+Acid_Plant_75.SC2Replay was not completed. Error: 
+Acid_Plant_76.SC2Replay was not completed. Error: 
+Acid_Plant_77.SC2Replay was not completed. Error: 
+Acid_Plant_78.SC2Replay was not completed. Error: 
+Acid_Plant_79.SC2Replay was not completed. Error: 
+Acid_Plant_8.SC2Replay was not completed. Error: 
+Acid_Plant_80.SC2Replay was not completed. Error: 
+Acid_Plant_81.SC2Replay was not completed. Error: 
+Acid_Plant_82.SC2Replay was not completed. Error: 
+Acid_Plant_83.SC2Replay was not completed. Error: 
+Acid_Plant_84.SC2Replay was not completed. Error: 
+Acid_Plant_85.SC2Replay was not completed. Error: 
+Acid_Plant_86.SC2Replay was not completed. Error: 
+Acid_Plant_87.SC2Replay was not completed. Error: 
+Acid_Plant_88.SC2Replay was not completed. Error: 
+Acid_Plant_89.SC2Replay was not completed. Error: 
+Acid_Plant_9.SC2Replay was not completed. Error: 
+Acid_Plant_90.SC2Replay was not completed. Error: 
+Acid_Plant_91.SC2Replay was not completed. Error: 
+Acid_Plant_92.SC2Replay was not completed. Error: 
+Acid_Plant_93.SC2Replay was not completed. Error: 
+Acid_Plant_94.SC2Replay was not completed. Error: 
+Acid_Plant_95.SC2Replay was not completed. Error: 
+Acid_Plant_96.SC2Replay was not completed. Error: 
+Acid_Plant_97.SC2Replay was not completed. Error: 
+Acid_Plant_98.SC2Replay was not completed. Error: 
+Acid_Plant_99.SC2Replay was not completed. Error: 
