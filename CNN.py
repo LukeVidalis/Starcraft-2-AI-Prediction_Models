@@ -5,6 +5,7 @@ from keras.layers.convolutional_recurrent import ConvLSTM2D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.convolutional import Conv3D
 from process_array import *
+from keras.models import load_model
 import os
 from settings import *
 
@@ -28,6 +29,7 @@ def create_model():
     seq_model = Sequential()
     seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same",
                              return_sequences=True))
+
     seq_model.add(BatchNormalization())
 
     seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
@@ -41,14 +43,15 @@ def create_model():
 
     seq_model.add(Conv3D(filters=1, kernel_size=(3, 3, 3), activation="sigmoid", padding="same",
                          data_format="channels_last"))
+
     seq_model.compile(loss="binary_crossentropy", optimizer="adadelta")
 
     return seq_model
 
 
-def save_model(model):
+def save_model(seq_model):
     # TODO add weights file
-    json_string = model.to_json()
+    json_string = seq_model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
 
@@ -84,7 +87,9 @@ def train_model(seq_model, x, Y):
     # validation_freq: run validation every x epochs. ( if validation_data != None)
 
 
+
 if __name__ == "__main__":
     x, Y = load_files()
-    model = create_model()
-    history, model = train_model(model, x, Y)
+    seq_model = create_model()
+    history, seq_model = train_model(seq_model, x, Y)
+    save_model(seq_model)
