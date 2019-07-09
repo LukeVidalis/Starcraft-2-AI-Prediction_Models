@@ -52,8 +52,8 @@ def save_model(model):
 
 
 def load_model():
-    """ code here """
-
+    model = load_model(json_file)
+    return model
 
 def train_model(model, x, Y):
 
