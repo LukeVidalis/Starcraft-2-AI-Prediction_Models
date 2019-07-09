@@ -15,7 +15,6 @@ def load_array(filename):
     arr = np.load(filename)
     return arr
 
-#np_im = None
 
 def process_images():
     input_frames = []
@@ -38,15 +37,15 @@ def process_images():
             print("Replay " + str(i))
             for frame in matching:
                 im = Image.open(proj_dir + "\\" + frame)
-                #global np_im
-                #print(d)
-                #d += 1
+                # global np_im
+                # print(d)
+                # d += 1
                 np_im = np.array(im)
                 input.append(np_im)
                 output.append(np_im)
                 all_frames.append(np_im)
-                #gc.collect()
-            #print("inputting in arrays")
+                # gc.collect()
+            # print("inputting in arrays")
             input.pop(len(input)-1)
             output.pop(0)
             input_frames += input
