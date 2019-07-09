@@ -4,6 +4,7 @@ from keras.layers.convolutional_recurrent import ConvLSTM2D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.convolutional import Conv3D
 from process_array import *
+from keras.models import load_model
 import os
 from settings import *
 
@@ -24,47 +25,50 @@ def load_files():
 
 
 def create_model():
-    model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same",
+
+    seq_model = Sequential()
+
+    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same",
                          return_sequences=True))
-    model.add(BatchNormalization())
+    seq_model.add(BatchNormalization())
 
-    model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
-    model.add(BatchNormalization())
+    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
+    seq_model.add(BatchNormalization())
 
-    model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
-    model.add(BatchNormalization())
+    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
+    seq_model.add(BatchNormalization())
 
-    model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
-    model.add(BatchNormalization())
+    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
+    seq_model.add(BatchNormalization())
 
-    model.add(Conv3D(filters=1, kernel_size=(3, 3, 3), activation="sigmoid", padding="same",
+    seq_model.add(Conv3D(filters=1, kernel_size=(3, 3, 3), activation="sigmoid", padding="same",
                      data_format="channels_last"))
-    model.compile(loss="binary_crossentropy", optimizer="adadelta")
+    seq_model.compile(loss="binary_crossentropy", optimizer="adadelta")
 
-    return model
+    return seq_model
 
 
-def save_model(model):
+def save_model(seq_model):
     # TODO add weights file
-    json_string = model.to_json()
+    json_string = seq_model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
 
 
-def load_model():
-    model = load_model(json_file)
-    return model
+def get_model():
+    return load_model(json_file)
 
-def train_model(model, x, Y):
+def train_model(seq_model, x, Y):
 
-    model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=1, callbacks=None, validation_split=0.2,
+    seq_model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=1, callbacks=None, validation_split=0.2,
               validation_data=None, shuffle=True, class_weight=None, sample_weight=None, initial_epoch=0,
               steps_per_epoch=None, validation_steps=None, validation_freq=1)
 
-    return model
+    return seq_model
 
 
 if __name__ == "__main__":
     x, Y = load_files()
-    model = create_model()
-    model = train_model(model, x, Y)
+    seq_model = create_model()
+    seq_model = train_model(seq_model, x, Y)
+    save_model(seq_model)
