@@ -1,9 +1,7 @@
 .idea/
 
-<<<<<<< HEAD
 Frames/
 New Replays/
+Numpy Arrays/
 error_log.txt
-=======
-#Frames/
->>>>>>> parent of 0ee7ac41e... Developed CNN further, created files with Acid Plant replays numpy arrays, created class process_images to transform immages to numpy arrays.
+
