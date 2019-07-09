@@ -17,6 +17,5 @@ def main():
             x += 1
 
 
-# Driver Code
 if __name__ == '__main__':
     main()
