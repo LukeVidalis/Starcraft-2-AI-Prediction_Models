@@ -17,32 +17,30 @@ img_width = 128
 img_height = 128
 rgb = 3
 epochs_num = 100
-batch_size = 250
+batch_size = 1
 
 
 def load_files():
-    data = load_array("Acid_Plant")
+    data = load_array("Acid_Plant.npz")
     return data['x'], data['Y']
 
 
 def create_model():
     seq_model = Sequential()
-    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same",
-                             return_sequences=True))
+    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same"))
 
     seq_model.add(BatchNormalization())
 
-    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
+    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     seq_model.add(BatchNormalization())
 
-    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
+    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     seq_model.add(BatchNormalization())
 
-    seq_model.add(ConvLSTM2D(filters=32, kernel_size=(3, 3), padding="same", return_sequences=True))
+    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     seq_model.add(BatchNormalization())
 
-    seq_model.add(Conv3D(filters=1, kernel_size=(3, 3, 3), activation="sigmoid", padding="same",
-                         data_format="channels_last"))
+    seq_model.add(Conv2D(filters=3, kernel_size=(3, 3), activation="sigmoid", padding="same"))
 
     seq_model.compile(loss="binary_crossentropy", optimizer="adadelta")
 
@@ -64,8 +62,7 @@ def train_model(seq_model, x, Y):
 
     history = seq_model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
                             validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
-                            sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None,
-                            validation_freq=1)
+                            sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
     return history, seq_model
 
@@ -89,7 +86,11 @@ def train_model(seq_model, x, Y):
 
 
 if __name__ == "__main__":
+    print("Getting Data")
     x, Y = load_files()
+    print("\nCreating Model")
     seq_model = create_model()
+    print("\nTraining Model")
     history, seq_model = train_model(seq_model, x, Y)
+    print("\nSaving Model")
     save_model(seq_model)

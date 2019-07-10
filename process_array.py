@@ -8,7 +8,7 @@ from PIL import Image
 def save_array(filename, x, Y, complete):
 
     np.savez(filename, x=x, Y=Y)
-    np.save(filename+"_ALL", complete)
+    #np.save(filename+"_ALL", complete)
 
 
 def load_array(filename):
@@ -24,15 +24,12 @@ def process_images():
     proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
     frames_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
 
-    d = 0
-
-    for i in range(142):
+    for i in range(50):
         replay = "_" + str(i) + "_f"
         input = []
         output = []
         if any(replay in s for s in frames_list):
             matching = [s for s in frames_list if replay in s]
-            d += 1
             print("\nReplay " + str(i))
             #while len(matching) != 0:
             for j in range(len(matching)):
@@ -43,11 +40,11 @@ def process_images():
                 np_im = np.array(im)
                 input.append(np_im)
                 output.append(np_im)
-                all_frames.append(np_im)
+                #all_frames.append(np_im)
             input.pop(len(input)-1)
             output.pop(0)
-            input_frames + input
-            output_frames + output
+            input_frames += input
+            output_frames += output
             print(str(i) + " finished  -> Next Replay")
         gc.collect()
 
