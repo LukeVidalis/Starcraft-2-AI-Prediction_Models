@@ -5,9 +5,9 @@ from keras.layers.convolutional_recurrent import ConvLSTM2D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.convolutional import Conv3D
 from process_array import *
-from keras.models import load_model
 import os
 from settings import *
+from numba import vectorize
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model.json')
@@ -20,8 +20,9 @@ epochs_num = 100
 batch_size = 1
 
 
+@vectorize(['float32(float32, float32)'], target='cuda')
 def load_files():
-    data = load_array("Acid_Plant.npz")
+    data = load_array("Acid_Plant10.npz")
     return data['x'], data['Y']
 
 
