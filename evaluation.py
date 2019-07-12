@@ -20,6 +20,7 @@ def evaluate(model):
     im = Image.open("./Frames/Acid_Plant/Acid_Plant_80_frame_3117.png")
     np_im = numpy.array(im)
     out = model.predict(np_im)
+    Image.fromarray(out.astype('uint8')).save("prediction.png")
     print(out)
 
 
