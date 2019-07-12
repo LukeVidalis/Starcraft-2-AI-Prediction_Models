@@ -1,5 +1,5 @@
 from keras.models import Sequential, load_model
-from keras.layers import Conv2D
+from keras.layers import Conv2D, Conv3D
 from keras.layers.normalization import BatchNormalization
 from process_array import *
 import os
@@ -17,7 +17,6 @@ epochs_num = 100
 batch_size = 1
 
 
-@vectorize(['float32(float32, float32)'], target='cuda')
 def load_files():
     data = load_array("Acid_Plant10.npz")
     return data['x'], data['Y']
@@ -31,14 +30,15 @@ def create_model():
 
     seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     seq_model.add(BatchNormalization())
+    #
+    # seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
+    # seq_model.add(BatchNormalization())
+    #
+    # seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
+    # seq_model.add(BatchNormalization())
 
-    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
-    seq_model.add(BatchNormalization())
-
-    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
-    seq_model.add(BatchNormalization())
-
-    seq_model.add(Conv2D(filters=3, kernel_size=(3, 3), activation="sigmoid", padding="same"))
+    seq_model.add(Conv2D(filters=3, kernel_size=(3, 3), activation="sigmoid", padding="same",
+                         data_format="channels_first"))
 
     seq_model.compile(loss="binary_crossentropy", optimizer="adadelta")
 
