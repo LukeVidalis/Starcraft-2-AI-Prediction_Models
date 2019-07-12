@@ -5,6 +5,7 @@ from PIL import Image
 import numpy
 from CNN import create_model
 
+
 def load(filename):
     json_file = os.path.join(WEIGHTS_DIR, filename)
     weight_file = os.path.join(WEIGHTS_DIR, "Model1.h5")
