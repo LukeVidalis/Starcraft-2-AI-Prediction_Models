@@ -23,13 +23,13 @@ def load_files():
 
 
 def create_model():
-    seq_model = Sequential()
-    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same"))
+    model = Sequential()
 
-    seq_model.add(BatchNormalization())
+    model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same"))
+    model.add(BatchNormalization())
 
-    seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
-    seq_model.add(BatchNormalization())
+    model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
+    model.add(BatchNormalization())
     #
     # seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     # seq_model.add(BatchNormalization())
@@ -37,32 +37,31 @@ def create_model():
     # seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     # seq_model.add(BatchNormalization())
 
-    seq_model.add(Conv2D(filters=3, kernel_size=(3, 3), activation="sigmoid", padding="same",
-                         data_format="channels_first"))
+    model.add(Conv2D(filters=3, kernel_size=(3, 3), activation="sigmoid", padding="same"))
 
-    seq_model.compile(loss="binary_crossentropy", optimizer="adadelta")
+    model.compile(loss="binary_crossentropy", optimizer="adadelta")
 
-    return seq_model
+    return model
 
 
-def save_model(seq_model):
+def save_model(model):
     json_string = seq_model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
-    seq_model.save_weights("model.h5")
+    model.save_weights("model.h5")
 
 
 def get_model():
     return load_model(json_file)
 
 
-def train_model(seq_model, x, Y):
+def train_model(model, x, Y):
 
-    history = seq_model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
-                            validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
-                            sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+    hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
+                        validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
+                        sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
-    return history, seq_model
+    return hst, model
 
     # x: Input
     # y: Output

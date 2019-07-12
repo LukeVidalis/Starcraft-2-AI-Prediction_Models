@@ -26,5 +26,8 @@ def evaluate(model):
 if __name__ == "__main__":
     # model = load("CNN_model.json")
     model = create_model()
+    print("Model Created")
     model.load_weights("./Model/model1.h5")
+    print("Weights Loaded")
+
     evaluate(model)
