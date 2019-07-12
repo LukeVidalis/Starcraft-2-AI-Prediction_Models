@@ -1,16 +1,19 @@
 from keras.models import load_model
-from settings import *
 import os
+from settings import *
 
-json_file_model = os.path.join(WEIGHTS_DIR, 'CNN_model.json')
-json_file_weights = os.path.join(WEIGHTS_DIR, 'model2.h5')
-seq_model = None
-model_weights = None
 
-def load():
-    seq_model = load_model(json_file_model)
+def load(filename):
+    json_file = os.path.join(WEIGHTS_DIR, filename)
+    weight_file = os.path.join(WEIGHTS_DIR, "Model1.h5")
+    mod = load_model(json_file)
+    mod.load_weights(weight_file)
+    return mod
 
+
+def evaluate(model):
 
 
 if __name__ == "__main__":
-    load()
+    model = load("CNN_model.json")
+    evaluate(model)
