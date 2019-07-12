@@ -1,9 +1,6 @@
 from keras.models import Sequential, load_model
-
-from keras.layers import Conv2D, Dropout, MaxPooling2D, Activation
-from keras.layers.convolutional_recurrent import ConvLSTM2D
+from keras.layers import Conv2D
 from keras.layers.normalization import BatchNormalization
-from keras.layers.convolutional import Conv3D
 from process_array import *
 import os
 from settings import *
@@ -49,10 +46,10 @@ def create_model():
 
 
 def save_model(seq_model):
-    # TODO add weights file
     json_string = seq_model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
+    seq_model.save_weights("model.h5")
 
 
 def get_model():
@@ -83,7 +80,6 @@ def train_model(seq_model, x, Y):
     # starting the next epoch.
     # validation_steps: if steps_per_epoch != None, total number of steps to validate before stopping
     # validation_freq: run validation every x epochs. ( if validation_data != None)
-
 
 
 if __name__ == "__main__":
