@@ -30,10 +30,10 @@ def create_model():
 
     model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     model.add(BatchNormalization())
-    #
+
     # seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     # seq_model.add(BatchNormalization())
-    #
+
     # seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     # seq_model.add(BatchNormalization())
 
@@ -58,8 +58,8 @@ def get_model():
 def train_model(model, x, Y):
 
     hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
-                        validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
-                        sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+                    validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
+                    sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
     return hst, model
 
