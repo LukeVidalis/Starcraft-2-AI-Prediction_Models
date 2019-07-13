@@ -1,5 +1,5 @@
 from keras.models import Sequential, load_model
-from keras.layers import Conv2D, Conv3D
+from keras.layers import Conv2D, Activation, Dropout
 from keras.layers.normalization import BatchNormalization
 from process_array import *
 import os
@@ -26,10 +26,41 @@ def create_model():
     model = Sequential()
 
     model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same"))
+
+    model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
+    model.add(Activation("sigmoid"))
     model.add(BatchNormalization())
 
     model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
+    model.add(Activation("sigmoid"))
     model.add(BatchNormalization())
+    model.add(Dropout(0.25))
+
+    model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same"))
+    model.add(Activation("sigmoid"))
+    model.add(BatchNormalization())
+
+    model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same"))
+    model.add(Activation("sigmoid"))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.25))
+
+    model.add(Conv2D(filters=128, kernel_size=(3, 3), padding="same"))
+    model.add(Activation("sigmoid"))
+    model.add(BatchNormalization())
+
+    model.add(Conv2D(filters=128, kernel_size=(3, 3), padding="same"))
+    model.add(Activation("sigmoid"))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.25))
+
+    # model.add(Flatten())
+    # model.add(Dense(512))
+    # model.add(Activation("sigmoid"))
+    # model.add(BatchNormalization())
+    # model.add(Dropout(0.5))
+
+
     #
     # seq_model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same"))
     # seq_model.add(BatchNormalization())
