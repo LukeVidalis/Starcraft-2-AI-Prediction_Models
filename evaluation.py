@@ -42,7 +42,7 @@ def evaluate(model):
     np_arr_2 = np_arr_2["x"]
     out = model.predict(np_arr_2)
     out = np.resize(out, (128, 128, 3))
-    save_img("prediction.png", out)
+    save_img(frame+"_pred.png", out)
     print(out)
 
 

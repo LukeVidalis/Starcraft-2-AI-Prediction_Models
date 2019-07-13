@@ -1,10 +1,10 @@
 from keras.models import Sequential, load_model
-from keras.layers import Conv2D, Conv3D
+from keras.layers import Conv2D
 from keras.layers.normalization import BatchNormalization
 from process_array import *
 import os
 from settings import *
-from numba import vectorize
+
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model.json')
