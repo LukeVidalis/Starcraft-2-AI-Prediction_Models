@@ -10,20 +10,18 @@ from CNN import create_model
 
 # Parameters
 model_id = 7
-img_width = 128
-img_height = 128
-rgb = 3
 epochs_num = 100
 batch_size = 1
-
+val_split = 0.2
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
+dataset = "Acid_Plant10.npz"
 
 
 def load_files():
     print("Getting Data")
-    data = load_array("Acid_Plant10.npz")
+    data = load_array(dataset)
     return data['x'], data['Y']
 
 
@@ -44,7 +42,7 @@ def train_model(model, x, Y):
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
     hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
-                    validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
+                    validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
                     sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
     end = time.time()
     print("Time Elapsed: "+str(end-start))
