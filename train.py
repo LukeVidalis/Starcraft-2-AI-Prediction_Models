@@ -1,15 +1,15 @@
-from keras.models import Sequential, load_model
-from keras.layers import Conv2D
-from keras.layers.normalization import BatchNormalization
-from process_array import *
 import os
+import time
+from datetime import datetime
+from threading import Timer
+from keras.models import load_model
+from process_array import *
 from settings import *
+from CNN import create_model
 
-
-# Paths
-json_file = os.path.join(WEIGHTS_DIR, 'CNN_model.json')
 
 # Parameters
+model_id = 7
 img_width = 128
 img_height = 128
 rgb = 3
@@ -17,32 +17,22 @@ epochs_num = 100
 batch_size = 1
 
 
+# Paths
+json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
+
+
 def load_files():
+    print("Getting Data")
     data = load_array("Acid_Plant10.npz")
     return data['x'], data['Y']
 
 
-def create_model():
-    model = Sequential()
-
-    model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(img_width, img_height, rgb), padding="same"))
-    model.add(BatchNormalization())
-
-    model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same"))
-    model.add(BatchNormalization())
-
-    model.add(Conv2D(filters=3, kernel_size=(3, 3), activation="sigmoid", padding="same"))
-
-    model.compile(loss="binary_crossentropy", optimizer="adadelta")
-
-    return model
-
-
 def save_model(model):
-    json_string = seq_model.to_json()
+    print("Saving Model")
+    json_string = model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
-    model.save_weights("model.h5")
+    model.save_weights("model"+str(model_id)+".h5")
 
 
 def get_model():
@@ -50,11 +40,14 @@ def get_model():
 
 
 def train_model(model, x, Y):
-
+    print("Training Model")
+    print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
+    start = time.time()
     hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
                     validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
                     sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
-
+    end = time.time()
+    print("Time Elapsed: "+str(end-start))
     return hst, model
 
     # x: Input
@@ -75,12 +68,35 @@ def train_model(model, x, Y):
     # validation_freq: run validation every x epochs. ( if validation_data != None)
 
 
-if __name__ == "__main__":
-    print("Getting Data")
+def schedule():
+    now = datetime.today()
+    while True:
+        try:
+            target = datetime.strptime(input('Specify time in HHMM format: '), "%H%M")
+            break
+        except ValueError:
+            print("Please write the time in HHMM format.")
+    total_time = target - now
+    secs = total_time.seconds+1
+    t = Timer(secs, actions)
+    hours = int(secs / 3600)
+    mins = (secs - (3600*hours))/60
+    print("Timer started: "+str(hours)+" hours and "+str(mins)+" minutes remaining.")
+    t.start()
+
+
+def actions():
     x, Y = load_files()
-    print("\nCreating Model")
     seq_model = create_model()
-    print("\nTraining Model")
     history, seq_model = train_model(seq_model, x, Y)
-    print("\nSaving Model")
     save_model(seq_model)
+
+
+if __name__ == "__main__":
+    usr_input = input("Do you want to set up a scheduled run? (y/n)")
+    if usr_input == "y" or usr_input == "Y" or usr_input == "yes":
+        schedule()
+    elif usr_input == "n" or usr_input == "N" or usr_input == "no":
+        actions()
+    else:
+        print("Input not recognized.")
