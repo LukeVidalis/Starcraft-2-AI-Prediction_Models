@@ -11,7 +11,7 @@ np.set_printoptions(threshold=sys.maxsize)
 
 def load(filename):
     json_file = os.path.join(WEIGHTS_DIR, filename)
-    weight_file = os.path.join(WEIGHTS_DIR, "Model2.h5")
+    weight_file = os.path.join(WEIGHTS_DIR, "Model_2.h5")
     print(json_file)
     mod = load_model("D:\\Starcraft 2 AI\\Model\\CNN_mode_luke.json")
     print(weight_file)
@@ -42,11 +42,28 @@ def evaluate(model):
     np_arr_2 = np_arr_2["x"]
     out = model.predict(np_arr_2)
     out = np.resize(out, (128, 128, 3))
+    pred = Image.fromarray(out.astype("uint8"), "RGB")
+    pred.save("test.png")
+    Image.fromarray(out.astype('uint8')).save("test2.png")
+    # new_im = []
+    # img = Image.new("RGB", (128, 128))
+    # for (x, y, z), value in np.ndenumerate(out):
+    #     new_im.append((z,y,x))
+    #
+    # #pxIter = iter(new_im)
+    # index = 0
+    #
+    # for x in range(128):
+    #     for y in range(128):
+    #         img.putpixel((y,x), new_im[index])
+    #         index += 1
+    # img.save("test.png")
+
     save_img(frame+"_pred.png", out)
-    print(out)
+    #print(out)
 
 
 if __name__ == "__main__":
-    model = load_json("CNN_model2.json", "Model2.h5")
+    model = load_json("CNN_model_2.json", "weights_2.h5")
     evaluate(model)
     print("Evaluation Complete")
