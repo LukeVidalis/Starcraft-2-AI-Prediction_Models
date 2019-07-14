@@ -1,6 +1,7 @@
 import os
 import time
-import datetime
+from datetime import datetime
+from threading import Timer
 from keras.models import load_model
 from process_array import *
 from settings import *
@@ -28,7 +29,7 @@ def load_files():
 
 def save_model(model):
     print("Saving Model")
-    json_string = seq_model.to_json()
+    json_string = model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
     model.save_weights("model"+str(model_id)+".h5")
@@ -67,8 +68,35 @@ def train_model(model, x, Y):
     # validation_freq: run validation every x epochs. ( if validation_data != None)
 
 
-if __name__ == "__main__":
+def schedule():
+    now = datetime.today()
+    while True:
+        try:
+            target = datetime.strptime(input('Specify time in HHMM format: '), "%H%M")
+            break
+        except ValueError:
+            print("Please write the time in HHMM format.")
+    total_time = target - now
+    secs = total_time.seconds+1
+    t = Timer(secs, actions)
+    hours = int(secs / 3600)
+    mins = (secs - (3600*hours))/60
+    print("Timer started: "+str(hours)+" hours and "+str(mins)+" minutes remaining.")
+    t.start()
+
+
+def actions():
     x, Y = load_files()
     seq_model = create_model()
     history, seq_model = train_model(seq_model, x, Y)
     save_model(seq_model)
+
+
+if __name__ == "__main__":
+    usr_input = input("Do you want to set up a scheduled run? (y/n)")
+    if usr_input == "y" or usr_input == "Y" or usr_input == "yes":
+        schedule()
+    elif usr_input == "n" or usr_input == "N" or usr_input == "no":
+        actions()
+    else:
+        print("Input not recognized.")
