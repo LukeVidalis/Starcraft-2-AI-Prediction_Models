@@ -60,7 +60,7 @@ def lr_schedule():
     return lambda epoch: 0.001 if epoch < 75 else 0.0001
 
 
-def train_model(model, x, Y):
+def train_model(model):
     print("Training Model")
     callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
                                                                        save_best_only=True)]
@@ -115,9 +115,9 @@ def schedule():
 
 
 def actions():
-    x, Y = load_files()
+    # x, Y = load_files()
     seq_model = create_model()
-    history, seq_model = train_model(seq_model, x, Y)
+    history, seq_model = train_model(seq_model)
     save_model(seq_model)
 
 
