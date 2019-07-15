@@ -6,7 +6,8 @@ from keras.models import load_model
 from process_array import *
 from settings import *
 from CNN import create_model
-
+from matplotlib import pyplot
+import pandas as pd
 
 # Parameters
 model_id = 7
@@ -46,6 +47,18 @@ def train_model(model, x, Y):
     hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
                     validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
                     sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+
+    hist_df = pd.DataFrame(hst.history)
+    hist_json_file = "history_model_" + str(model_id) + ".json"
+    with open(hist_json_file, mode='w') as f:
+        hist_df.to_json(f)
+
+    pyplot.title("Loss / Mean Squared Error")
+    pyplot.plot(hst.history["loss"], label="train")
+    pyplot.plot(hst.history["val_loss"], label="test")
+    pyplot.legend()
+    pyplot.show()
+
     end = time.time()
     print("Time Elapsed: "+str(end-start))
     return hst, model
