@@ -1,12 +1,12 @@
 import os
 import time
+import random
 from datetime import datetime
 from threading import Timer
 from keras.models import load_model
 from process_array import *
 from settings import *
 from CNN import create_model
-
 
 # Parameters
 model_id = 7
@@ -23,6 +23,19 @@ def load_files():
     print("Getting Data")
     data = load_array(dataset)
     return data['x'], data['Y']
+
+
+def generator(features, labels, batch_size):
+    # Create empty arrays to contain batch of features and labels
+    batch_features = np.zeros((batch_size, 128, 128, 3))
+    batch_labels = np.zeros((batch_size, 1))
+    while True:
+        for i in range(batch_size):
+            # choose random index in features
+            index = random.choice(len(features), 1)
+            batch_features[i] = features[index]
+            batch_labels[i] = labels[index]
+        yield batch_features, batch_labels
 
 
 def save_model(model):

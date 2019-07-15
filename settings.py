@@ -1,6 +1,6 @@
 
 # Directory of the frames
-DATA_DIR = './Frames/'
+DATA_DIR = './Data/'
 
 # Where model weights and config will be saved
 WEIGHTS_DIR = './Model/'
