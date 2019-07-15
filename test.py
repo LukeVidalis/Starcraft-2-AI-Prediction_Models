@@ -33,7 +33,25 @@ def memory():
     print("%x" % sys.maxsize, sys.maxsize > 2**32)
 
 
+def lists():
+    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    z = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    y = chunks(x, 2)
+    w = chunks(z, 2)
+
+    print(list(y))
+    print(list(w))
+
+
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
+
 if __name__ == '__main__':
     # main()
-    sorting()
-    memory()
+    # sorting()
+    # memory()
+    lists()

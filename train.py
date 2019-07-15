@@ -1,63 +1,86 @@
 import os
 import time
+import random
 from datetime import datetime
 from threading import Timer
 from keras.models import load_model
 from process_array import *
-from settings import *
 from CNN import create_model
-from matplotlib import pyplot
 import pandas as pd
+from settings import *
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 # Parameters
 model_id = 7
-img_width = 128
-img_height = 128
-rgb = 3
 epochs_num = 100
 batch_size = 1
-
+val_split = 0.2
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
+dataset = "Acid_Plant10.npz"
 
 
 def load_files():
     print("Getting Data")
-    data = load_array("Acid_Plant10.npz")
+    data = load_array(dataset)
     return data['x'], data['Y']
 
 
-def save_model(model):
+def generator():
+    # Create empty arrays to contain batch of features and labels
+    file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
+
+    # Generate data
+    for file in file_list:
+        # Store sample
+        X = file['x']
+
+        # Store class
+        y = file['Y']
+
+    yield X, y
+
+
+def save_model(model, hst):
+    if not os.path.exists(WEIGHTS_DIR):
+        os.mkdir(WEIGHTS_DIR)
+
     print("Saving Model")
     json_string = model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
     model.save_weights("model"+str(model_id)+".h5")
 
-
-def get_model():
-    return load_model(json_file)
-
-
-def train_model(model, x, Y):
-    print("Training Model")
-    print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
-    start = time.time()
-    hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
-                    validation_split=0.2, validation_data=None, shuffle=True, class_weight=None,
-                    sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
-
     hist_df = pd.DataFrame(hst.history)
     hist_json_file = "history_model_" + str(model_id) + ".json"
     with open(hist_json_file, mode='w') as f:
         hist_df.to_json(f)
 
-    pyplot.title("Loss / Mean Squared Error")
-    pyplot.plot(hst.history["loss"], label="train")
-    pyplot.plot(hst.history["val_loss"], label="test")
-    pyplot.legend()
-    pyplot.show()
+
+def get_model():
+    return load_model(json_file)
+
+
+def lr_schedule():
+    return lambda epoch: 0.001 if epoch < 75 else 0.0001
+
+
+def train_model(model, x, Y):
+    print("Training Model")
+    callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
+                                                                       save_best_only=True)]
+
+    print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
+    start = time.time()
+
+    # hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
+    #                 validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
+    #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+
+    hst = model.fit_generator(generator, steps_per_epoch=92, epochs=epochs_num, verbose=2, callbacks=callbacks,
+                              validation_data=None, validation_steps=None, validation_freq=1, class_weight=None,
+                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0
 
     end = time.time()
     print("Time Elapsed: "+str(end-start))
@@ -102,7 +125,7 @@ def actions():
     x, Y = load_files()
     seq_model = create_model()
     history, seq_model = train_model(seq_model, x, Y)
-    save_model(seq_model)
+    save_model(seq_model, history)
 
 
 if __name__ == "__main__":

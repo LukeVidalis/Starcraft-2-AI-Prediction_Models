@@ -116,7 +116,7 @@ def main(unused):
     image_list = load_replay(proj_dir, "Acid_Plant_11.SC2Replay")
     create_images(image_list, "Acid_Plant_11.SC2Replay")
     """
-#pysc2.lib.protocol.ConnectionError
+
 
 def create_images(minimap_list, filename):
     i = 0
@@ -213,8 +213,8 @@ def load_replay(proj_dir, filename):
             controller.step(step_mul)
             obs = controller.observe()
 
-            #global agent_obs
-            #agent_obs = features.transform_obs(obs)
+            # global agent_obs
+            # agent_obs = features.transform_obs(obs)
             try:
                 agent_obs = _features.transform_obs(obs)
             except:
@@ -239,7 +239,7 @@ def load_replay(proj_dir, filename):
             if obs.player_result:
                 break
 
-            #_state = StepType.MID
+            # state = StepType.MID
     return minimap
 
 
