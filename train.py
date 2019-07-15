@@ -1,11 +1,11 @@
 import os
 import time
-import random
 from datetime import datetime
 from threading import Timer
 from keras.models import load_model
 from process_array import *
 from CNN import create_model
+import pandas as pd
 from settings import *
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
@@ -33,15 +33,15 @@ def generator():
     # Generate data
     for file in file_list:
         # Store sample
-        X = file['x']
+        x = file['x']
 
         # Store class
-        y = file['Y']
+        Y = file['Y']
 
-    yield X, y
+    yield x, Y
 
 
-def save_model(model):
+def save_model(model, hst):
     if not os.path.exists(WEIGHTS_DIR):
         os.mkdir(WEIGHTS_DIR)
 
@@ -50,6 +50,11 @@ def save_model(model):
     with open(json_file, "w") as f:
         f.write(json_string)
     model.save_weights("model"+str(model_id)+".h5")
+
+    hist_df = pd.DataFrame(hst.history)
+    hist_json_file = "history_model_" + str(model_id) + ".json"
+    with open(hist_json_file, mode='w') as f:
+        hist_df.to_json(f)
 
 
 def get_model():
@@ -67,6 +72,7 @@ def train_model(model):
 
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
+
     # hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
     #                 validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
     #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
@@ -118,7 +124,7 @@ def actions():
     # x, Y = load_files()
     seq_model = create_model()
     history, seq_model = train_model(seq_model)
-    save_model(seq_model)
+    save_model(seq_model, history)
 
 
 if __name__ == "__main__":

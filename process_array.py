@@ -5,7 +5,7 @@ from os.path import isfile, join
 from PIL import Image
 
 
-def save_array(filename, x, Y, complete):
+def save_array(filename, x, Y):
 
     np.savez(filename, x=x, Y=Y)
     #np.save(filename+"_ALL", complete)
@@ -22,9 +22,12 @@ def process_images():
     all_frames = []
 
     proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
+    save_dir = "D:\\Starcraft 2 AI\\Numpy_Frames\\Acid_Plant"
     frames_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
 
-    for i in range(50):
+    file_number = 0
+
+    for i in range(150):
         replay = "_" + str(i) + "_f"
         input = []
         output = []
@@ -36,20 +39,53 @@ def process_images():
                 frame = "Acid_Plant_" + str(i) + "_frame_" + str(j) + ".png"
                 #if (matching[j][18:19] == frame) or (matching[j][18:20] == frame) or (matching[j][18:121] == frame):
                 im = Image.open(proj_dir + "\\" + frame)
-                print(frame)
+                #print(frame)
                 np_im = np.array(im)
                 input.append(np_im)
                 output.append(np_im)
-                #all_frames.append(np_im)
+                all_frames.append(np_im)
             input.pop(len(input)-1)
             output.pop(0)
             input_frames += input
             output_frames += output
-            print(str(i) + " finished  -> Next Replay")
-        gc.collect()
+            if len(all_frames) >= 5884:
+                file_name = save_dir + "\\Acid_Plant_" + str(file_number)
+                in_arr = input_frames[:5884]
+                out_arr = output_frames[:5884]
+                print(len(in_arr))
+                save_array(file_name, in_arr, out_arr)
+                input_frames = input_frames[5885:]
+                output_frames = input_frames[5885:]
+                all_frames = all_frames[5885:]
+                file_number += 1
+            #print("\nAll Frames: " + str(len(all_frames)))
+            #print(str(i) + " finished  -> Next Replay")
+        #gc.collect()
+    #
+    # for i in range(53):
+    #     file_name = save_dir + "\\Acid_Plant_" + str(i)
+    #     in_arr = input_frames[:5884]
+    #     out_arr = output_frames[:5884]
+    #     print(len(in_arr))
+    #     save_array(file_name, input_frames, output_frames)
+    #     for j in range(5884):
+    #         input_frames.pop(j)
+    #         output_frames.pop(j)
+    #         all_frames.pop(j)
 
-    save_array("Acid_Plant", input_frames, output_frames, all_frames)
     print("\nAll Frames: " + str(len(all_frames)))
+
+
+        # if len(all_frames) == 5884:
+        #     print("\nAll Frames: " + str(len(all_frames)))
+        #     file_name = save_dir + "\\Acid_Plant_" + str(file_number)
+        #     save_array(file_name, input_frames, output_frames)
+        #     input_frames = []
+        #     output_frames = []
+        #     all_frames = []
+
+    #save_array("Acid_Plant", input_frames, output_frames, all_frames)
+    #print("\nAll Frames: " + str(len(all_frames)))
 
 
 if __name__ == "__main__":
