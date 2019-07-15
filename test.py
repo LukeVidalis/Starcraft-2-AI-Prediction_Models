@@ -1,6 +1,6 @@
 import os
 import sys
-
+from emailer import *
 # Function to rename multiple files
 def main():
     main_dir = "D:\\Starcraft 2 AI\\New Replays\\"
@@ -50,8 +50,13 @@ def chunks(l, n):
         yield l[i:i + n]
 
 
+def email():
+    send_mail(1, 100)
+
+
 if __name__ == '__main__':
     # main()
     # sorting()
     # memory()
-    lists()
+    # lists()
+    email()

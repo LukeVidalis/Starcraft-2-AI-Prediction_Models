@@ -1,6 +1,5 @@
 import os
 import time
-import random
 from datetime import datetime
 from threading import Timer
 from keras.models import load_model
@@ -34,12 +33,12 @@ def generator():
     # Generate data
     for file in file_list:
         # Store sample
-        X = file['x']
+        x = file['x']
 
         # Store class
-        y = file['Y']
+        Y = file['Y']
 
-    yield X, y
+    yield x, Y
 
 
 def save_model(model, hst):
@@ -66,7 +65,7 @@ def lr_schedule():
     return lambda epoch: 0.001 if epoch < 75 else 0.0001
 
 
-def train_model(model, x, Y):
+def train_model(model):
     print("Training Model")
     callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
                                                                        save_best_only=True)]
@@ -80,7 +79,7 @@ def train_model(model, x, Y):
 
     hst = model.fit_generator(generator, steps_per_epoch=92, epochs=epochs_num, verbose=2, callbacks=callbacks,
                               validation_data=None, validation_steps=None, validation_freq=1, class_weight=None,
-                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0
+                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 
     end = time.time()
     print("Time Elapsed: "+str(end-start))
@@ -122,9 +121,9 @@ def schedule():
 
 
 def actions():
-    x, Y = load_files()
+    # x, Y = load_files()
     seq_model = create_model()
-    history, seq_model = train_model(seq_model, x, Y)
+    history, seq_model = train_model(seq_model)
     save_model(seq_model, history)
 
 
