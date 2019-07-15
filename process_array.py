@@ -43,21 +43,32 @@ def process_images():
                 np_im = np.array(im)
                 input.append(np_im)
                 output.append(np_im)
-                all_frames.append(np_im)
+                #all_frames.append(np_im)
             input.pop(len(input)-1)
             output.pop(0)
             input_frames += input
             output_frames += output
-            if len(all_frames) >= 5884:
+            print(len(input_frames))
+            print(len(output_frames))
+            if len(input_frames) >= 5884 and len(output_frames) >= 5884:
+                print("Creating File")
                 file_name = save_dir + "\\Acid_Plant_" + str(file_number)
                 in_arr = input_frames[:5884]
                 out_arr = output_frames[:5884]
-                print(len(in_arr))
+                #print(len(in_arr))
                 save_array(file_name, in_arr, out_arr)
                 input_frames = input_frames[5885:]
-                output_frames = input_frames[5885:]
-                all_frames = all_frames[5885:]
+                output_frames = output_frames[5885:]
+                #all_frames = all_frames[5884:]
+                print(len(input_frames))
+                print(len(output_frames))
                 file_number += 1
+
+    file_name = save_dir + "\\Acid_Plant_" + str(file_number)
+    save_array(file_name, input_frames, output_frames)
+    print("\ninput_frames: " + str(len(input_frames)))
+    print("\noutput_frames: " + str(len(output_frames)))
+    print("\nAll Frames: " + str(len(all_frames)))
             #print("\nAll Frames: " + str(len(all_frames)))
             #print(str(i) + " finished  -> Next Replay")
         #gc.collect()
@@ -73,7 +84,7 @@ def process_images():
     #         output_frames.pop(j)
     #         all_frames.pop(j)
 
-    print("\nAll Frames: " + str(len(all_frames)))
+
 
 
         # if len(all_frames) == 5884:
