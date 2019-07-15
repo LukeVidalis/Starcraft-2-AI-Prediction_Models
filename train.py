@@ -5,8 +5,9 @@ from datetime import datetime
 from threading import Timer
 from keras.models import load_model
 from process_array import *
-from settings import *
 from CNN import create_model
+from settings import *
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 # Parameters
 model_id = 7
@@ -25,20 +26,25 @@ def load_files():
     return data['x'], data['Y']
 
 
-def generator(features, labels, batch_size):
+def generator():
     # Create empty arrays to contain batch of features and labels
-    batch_features = np.zeros((batch_size, 128, 128, 3))
-    batch_labels = np.zeros((batch_size, 1))
-    while True:
-        for i in range(batch_size):
-            # choose random index in features
-            index = random.choice(len(features), 1)
-            batch_features[i] = features[index]
-            batch_labels[i] = labels[index]
-        yield batch_features, batch_labels
+    file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
+
+    # Generate data
+    for file in file_list:
+        # Store sample
+        X = file['x']
+
+        # Store class
+        y = file['Y']
+
+    yield X, y
 
 
 def save_model(model):
+    if not os.path.exists(WEIGHTS_DIR):
+        os.mkdir(WEIGHTS_DIR)
+
     print("Saving Model")
     json_string = model.to_json()
     with open(json_file, "w") as f:
@@ -50,13 +56,25 @@ def get_model():
     return load_model(json_file)
 
 
+def lr_schedule():
+    return lambda epoch: 0.001 if epoch < 75 else 0.0001
+
+
 def train_model(model, x, Y):
     print("Training Model")
+    callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
+                                                                       save_best_only=True)]
+
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
-    hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
-                    validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
-                    sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+    # hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
+    #                 validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
+    #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+
+    hst = model.fit_generator(generator, steps_per_epoch=92, epochs=epochs_num, verbose=2, callbacks=callbacks,
+                              validation_data=None, validation_steps=None, validation_freq=1, class_weight=None,
+                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
+
     end = time.time()
     print("Time Elapsed: "+str(end-start))
     return hst, model
