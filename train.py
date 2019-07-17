@@ -26,17 +26,18 @@ def load_files():
     return data['x'], data['Y']
 
 
-def generator():
+def generator(x, Y):
     # Create empty arrays to contain batch of features and labels
     file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
 
     # Generate data
     for file in file_list:
+        arr = load_array(file)
         # Store sample
-        x = file['x']
+        x = arr['x']
 
         # Store class
-        Y = file['Y']
+        Y = arr['Y']
 
     yield x, Y
 
