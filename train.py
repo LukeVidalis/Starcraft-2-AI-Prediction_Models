@@ -8,7 +8,7 @@ from CNN import create_model
 import pandas as pd
 from settings import *
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
-
+from evaluation import predict_image
 # Parameters
 model_id = 7
 epochs_num = 100
@@ -17,26 +17,27 @@ val_split = 0.2
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
-dataset = "Acid_Plant10.npz"
+# dataset = "Acid_Plant10.npz"
 
 
-def load_files():
+def load_files(dataset):
     print("Getting Data")
     data = load_array(dataset)
     return data['x'], data['Y']
 
 
-def generator():
+def generator(x, Y):
     # Create empty arrays to contain batch of features and labels
     file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
 
     # Generate data
     for file in file_list:
+        arr = load_array(file)
         # Store sample
-        x = file['x']
+        x = arr['x']
 
         # Store class
-        Y = file['Y']
+        Y = arr['Y']
 
     yield x, Y
 
@@ -57,15 +58,13 @@ def save_model(model, hst):
         hist_df.to_json(f)
 
 
-def get_model():
-    return load_model(json_file)
 
 
 def lr_schedule():
     return lambda epoch: 0.001 if epoch < 75 else 0.0001
 
 
-def train_model(model):
+def train_model(model, x, Y):
     print("Training Model")
     callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
                                                                        save_best_only=True)]
@@ -73,13 +72,13 @@ def train_model(model):
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
 
-    # hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=None,
-    #                 validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
-    #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+    hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=callbacks,
+                    validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
+                    sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
-    hst = model.fit_generator(generator, steps_per_epoch=92, epochs=epochs_num, verbose=2, callbacks=callbacks,
-                              validation_data=None, validation_steps=None, validation_freq=1, class_weight=None,
-                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
+    # hst = model.fit_generator(generator, steps_per_epoch=92, epochs=epochs_num, verbose=2, callbacks=callbacks,
+    #                           validation_data=None, validation_steps=None, validation_freq=1, class_weight=None,
+    #                           max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 
     end = time.time()
     print("Time Elapsed: "+str(end-start))
@@ -121,9 +120,13 @@ def schedule():
 
 
 def actions():
-    # x, Y = load_files()
-    seq_model = create_model()
-    history, seq_model = train_model(seq_model)
+    file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
+    seq_model = create_model(1)
+    history = None
+    for file in file_list:
+        x, Y = load_files(file)
+        history, seq_model = train_model(seq_model, x, Y)
+        predict_image(seq_model)
     save_model(seq_model, history)
 
 
