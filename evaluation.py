@@ -6,6 +6,9 @@ import numpy as np
 from keras.models import model_from_json
 from matplotlib import pyplot
 import sys
+import bytebuffer
+#import cv2
+from keras.preprocessing import image
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -44,23 +47,30 @@ def plot_history(hst):
 
 def predict_image(model):
     proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
-    frame = "Acid_Plant_0_frame_1500.png"
+    frame = "Acid_Plant_141_frame_1500.png"
     im = Image.open(proj_dir + "\\" + frame)
     np_im = np.array(im, dtype=np.int32)
+
     np_arr = []
     np_arr.append(np_im)
-    np.savez("test.npz", x=np_arr)
-    np_arr_2 = np.load("test.npz")
+    np.savez("to_predict.npz", x=np_arr)
+    np_arr_2 = np.load("to_predict.npz")
     np_arr_2 = np_arr_2["x"]
 
     out = model.predict(np_arr_2)
-    out = np.resize(out, (128, 128, 3))
+    out = out[0] # np.resize(out, (128, 128, 3))
 
-    out = (out * 765).astype(np.uint16)
+
+    # ByteBuffer buffer = ByteBuffer.wrap(os.toByteArray());
+    # buffer.rewind();
+    # bitmap_tmp.copyPixelsFromBuffer(buffer);
+    # img = image.array_to_img(out)
+    # img.save("predict_2.png")
+    out = (out * 255).astype(np.uint8)
     img = Image.fromarray(out)
-    img.save("test3.png")
+    img.save("predict_9.png")
 
-def abc():
+def checking_in_out_arrays():
     input = 0
     output = 0
     for i in range(52):
@@ -79,7 +89,6 @@ def abc():
 
 
 if __name__ == "__main__":
-    model = load_json("CNN_model_2.json", "weights_2.h5")
-    abc()
-    ##predict_image(model)
+    model = load_json("CNN_model_9.json", "weights_9.h5")
+    predict_image(model)
     print("Evaluation Complete")
