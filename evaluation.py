@@ -6,9 +6,6 @@ import numpy as np
 from keras.models import model_from_json
 from matplotlib import pyplot
 import sys
-import bytebuffer
-#import cv2
-from keras.preprocessing import image
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -45,7 +42,7 @@ def plot_history(hst):
     pyplot.show()
 
 
-def predict_image(model):
+def predict_image(model, id, batch):
     proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
     frame = "Acid_Plant_141_frame_1500.png"
     im = Image.open(proj_dir + "\\" + frame)
@@ -57,18 +54,27 @@ def predict_image(model):
     np_arr_2 = np.load("to_predict.npz")
     np_arr_2 = np_arr_2["x"]
 
-    out = model.predict(np_arr_2)
-    out = out[0] # np.resize(out, (128, 128, 3))
+    prediction = model.predict(np_arr_2)
+    prediction = prediction[0]  # np.resize(out, (128, 128, 3))
 
+    save_prediction(prediction, id, batch)
+
+
+def save_prediction(prediction, id, batch):
+    pred_dir = TRAIN_PREDICTION_DIR + "\\Model_" + str(id)
+    if not os.path.exists(pred_dir):
+        os.mkdir(pred_dir)
+
+    prediction = (prediction * 255).astype(np.uint8)
+    img = Image.fromarray(prediction)
+    img.save(pred_dir + "prediction_" + str(batch) + ".png")
 
     # ByteBuffer buffer = ByteBuffer.wrap(os.toByteArray());
     # buffer.rewind();
     # bitmap_tmp.copyPixelsFromBuffer(buffer);
     # img = image.array_to_img(out)
     # img.save("predict_2.png")
-    out = (out * 255).astype(np.uint8)
-    img = Image.fromarray(out)
-    img.save("predict_9.png")
+
 
 def checking_in_out_arrays():
     input = 0
