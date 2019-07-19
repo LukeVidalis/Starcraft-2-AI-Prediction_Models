@@ -50,7 +50,7 @@ def save_model(model, hst):
     json_string = model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
-    model.save_weights("model"+str(model_id)+".h5")
+    model.save_weights("weights_"+str(model_id)+".h5")
 
     hist_df = pd.DataFrame(hst.history)
     hist_json_file = "history_model_" + str(model_id) + ".json"
