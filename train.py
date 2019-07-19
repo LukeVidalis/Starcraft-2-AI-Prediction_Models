@@ -17,6 +17,9 @@ val_split = 0.2
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
+weights_file = os.path.join(WEIGHTS_DIR, 'weights_'+str(model_id)+'.h5')
+history_file = os.path.join(WEIGHTS_DIR, 'history_model_' + str(model_id) + '.json')
+
 # dataset = "Acid_Plant10.npz"
 
 
@@ -50,14 +53,11 @@ def save_model(model, hst):
     json_string = model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
-    model.save_weights("model"+str(model_id)+".h5")
+    model.save_weights(weights_file)
 
     hist_df = pd.DataFrame(hst.history)
-    hist_json_file = "history_model_" + str(model_id) + ".json"
-    with open(hist_json_file, mode='w') as f:
+    with open(history_file, mode='w') as f:
         hist_df.to_json(f)
-
-
 
 
 def lr_schedule():
@@ -120,10 +120,13 @@ def schedule():
 
 
 def actions():
+    batch_num = 0
     file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
     seq_model = create_model(1)
     history = None
     for file in file_list:
+        print(batch_num)
+        batch_num += 1
         x, Y = load_files(file)
         history, seq_model = train_model(seq_model, x, Y)
         predict_image(seq_model)
