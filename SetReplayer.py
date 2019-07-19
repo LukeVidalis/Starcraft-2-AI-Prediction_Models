@@ -18,6 +18,7 @@ from pysc2.env.sc2_env import Dimensions
 from pysc2.env.environment import TimeStep, StepType
 from pysc2.run_configs import lib as run_configs_lib
 from s2clientprotocol import sc2api_pb2 as sc_pb
+import gc
 
 FLAGS = flags.FLAGS
 
@@ -65,7 +66,7 @@ def set_flags():
     flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
 
-def main(unused):
+def main():
     set_flags()
     log_init()
     proj_dir = "D:\\Starcraft 2 AI\\New Replays\\Acid_Plant"
@@ -76,6 +77,7 @@ def main(unused):
             print("Replay: "+filename)
             image_list = load_replay(proj_dir, filename)
             create_images(image_list, filename)
+            gc.collect()
         except pysc2.lib.remote_controller.RequestError:
             print("Oops!", sys.exc_info(), "occurred.")
             print("Next entry.")
