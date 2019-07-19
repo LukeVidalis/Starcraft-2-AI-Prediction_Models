@@ -2,13 +2,15 @@ import os
 import time
 from datetime import datetime
 from threading import Timer
-from keras.models import load_model
 from process_array import *
 from CNN import create_model
 import pandas as pd
 from settings import *
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from evaluation import predict_image
+import tensorflow as tf
+from keras import backend as k
+
 # Parameters
 model_id = 7
 epochs_num = 100
@@ -17,7 +19,20 @@ val_split = 0.2
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
+weights_file = os.path.join(WEIGHTS_DIR, 'weights_'+str(model_id)+'.h5')
+history_file = os.path.join(WEIGHTS_DIR, 'history_model_' + str(model_id) + '.json')
+
 # dataset = "Acid_Plant10.npz"
+
+
+def gpu_setup():
+    config = tf.ConfigProto()
+    # Allocate memory as needed. No pre-allocation.
+    config.gpu_options.allow_growth = True
+    # Allow memory allocation up to this percentage.
+    config.gpu_options.per_process_gpu_memory_fraction = 0.5
+    # Create session with the above options.
+    k.tensorflow_backend.set_session(tf.Session(config=config))
 
 
 def load_files(dataset):
@@ -50,14 +65,12 @@ def save_model(model, hst):
     json_string = model.to_json()
     with open(json_file, "w") as f:
         f.write(json_string)
-    model.save_weights("weights_"+str(model_id)+".h5")
+        
+    model.save_weights(weights_file)
 
     hist_df = pd.DataFrame(hst.history)
-    hist_json_file = "history_model_" + str(model_id) + ".json"
-    with open(hist_json_file, mode='w') as f:
+    with open(history_file, mode='w') as f:
         hist_df.to_json(f)
-
-
 
 
 def lr_schedule():
@@ -120,13 +133,17 @@ def schedule():
 
 
 def actions():
+    gpu_setup()
+    batch_num = 0
     file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
     seq_model = create_model(1)
     history = None
     for file in file_list:
+        print("Current Batch: "+str(batch_num))
         x, Y = load_files(file)
         history, seq_model = train_model(seq_model, x, Y)
-        predict_image(seq_model)
+        predict_image(seq_model, model_id, batch_num)
+        batch_num += 1
     save_model(seq_model, history)
 
 
