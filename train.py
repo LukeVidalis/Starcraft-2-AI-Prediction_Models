@@ -39,7 +39,7 @@ def load_files(data_path, shuffle=True):
     print("Getting Data")
     data = load_array(data_path)
     x_val = data['x']
-    y_val = data['y']
+    y_val = data['Y']
 
     if shuffle:
         c = list(zip(x_val, y_val))
@@ -92,9 +92,10 @@ def lr_schedule():
 def train_model(model, x, Y):
     print("Training Model")
     split_id = math.floor(len(x)*(1-val_split))
-    steps_per_epoch = math.ceil(len(x)/batch_size)
     training_generator = data_generator(x[:split_id], Y[:split_id], batch_size)
     testing_generator = data_generator(x[split_id:], Y[:split_id], batch_size)
+    steps_per_epoch = math.ceil(len(x[:split_id])/batch_size)
+    val_steps_per_epoch = math.ceil(len(x[split_id:])/batch_size)
 
     callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
                                                                        verbose=1, save_best_only=True)]
@@ -107,9 +108,9 @@ def train_model(model, x, Y):
     #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
     hst = model.fit_generator(training_generator, steps_per_epoch=steps_per_epoch, epochs=epochs_num, verbose=2,
-                              callbacks=callbacks, validation_data=testing_generator, validation_steps=None,
-                              validation_freq=1, class_weight=None, max_queue_size=10, workers=1,
-                              use_multiprocessing=False, shuffle=True, initial_epoch=0)
+                              callbacks=callbacks, validation_data=testing_generator,
+                              validation_steps=val_steps_per_epoch, validation_freq=1, class_weight=None,
+                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 
     end = time.time()
     print("Time Elapsed: "+str(end-start))
