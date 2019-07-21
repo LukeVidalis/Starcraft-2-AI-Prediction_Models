@@ -241,7 +241,6 @@ def load_replay(proj_dir, filename):
             if obs.player_result:
                 break
 
-            # state = StepType.MID
     return minimap
 
 

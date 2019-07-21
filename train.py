@@ -1,5 +1,6 @@
 import os
 import time
+import math
 from datetime import datetime
 from threading import Timer
 from process_array import *
@@ -12,17 +13,16 @@ import tensorflow as tf
 from keras import backend as k
 
 # Parameters
-model_id = 7
+model_id = 13
 epochs_num = 100
-batch_size = 1
+batch_size = 32
 val_split = 0.2
 
 # Paths
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
 weights_file = os.path.join(WEIGHTS_DIR, 'weights_'+str(model_id)+'.h5')
 history_file = os.path.join(WEIGHTS_DIR, 'history_model_' + str(model_id) + '.json')
-
-# dataset = "Acid_Plant10.npz"
+dataset = os.path.join(DATA_DIR, "Acid_Plant_0.npz")
 
 
 def gpu_setup():
@@ -35,26 +35,45 @@ def gpu_setup():
     k.tensorflow_backend.set_session(tf.Session(config=config))
 
 
-def load_files(dataset):
+def load_files(data_path, shuffle=True):
     print("Getting Data")
-    data = load_array(dataset)
-    return data['x'], data['Y']
+    data = load_array(data_path)
+    x_val = data['x']
+    y_val = data['Y']
+
+    if shuffle:
+        c = list(zip(x_val, y_val))
+        np.random.shuffle(c)
+        x_val, y_val = zip(*c)
+
+    return x_val, y_val
 
 
-def generator(x, Y):
-    # Create empty arrays to contain batch of features and labels
-    file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
+def data_generator(x_data, y_data, bs):
+    # open the CSV file for reading
+    index = 0
 
-    # Generate data
-    for file in file_list:
-        arr = load_array(file)
-        # Store sample
-        x = arr['x']
+    # loop indefinitely
+    while True:
+        # initialize our batches of images and labels
+        images_x = []
+        images_y = []
 
-        # Store class
-        Y = arr['Y']
+        # keep looping until we reach our batch size
+        while len(images_x) < bs:
 
-    yield x, Y
+            images_x.append(x_data[index])
+            images_y.append(y_data[index])
+            index += 1
+
+        np.save("x_train.npy", images_x)
+        np.save("y_train.npy", images_y)
+
+        arr_load = np.load("x_train.npy")
+        images_x = arr_load
+        arr_load = np.load("y_train.npy")
+        images_y = arr_load
+        yield (images_x, images_y)
 
 
 def save_model(model, hst):
@@ -79,19 +98,26 @@ def lr_schedule():
 
 def train_model(model, x, Y):
     print("Training Model")
+    split_id = math.floor(len(x)*(1-val_split))
+    training_generator = data_generator(x[:split_id], Y[:split_id], batch_size)
+    testing_generator = data_generator(x[split_id:], Y[:split_id], batch_size)
+    steps_per_epoch = math.ceil(len(x[:split_id])/batch_size)
+    val_steps_per_epoch = math.ceil(len(x[split_id:])/batch_size)
+
     callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
-                                                                       save_best_only=True)]
+                                                                       verbose=1, save_best_only=True)]
 
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
 
-    hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=callbacks,
-                    validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
-                    sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+    # hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=callbacks,
+    #                 validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
+    #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
-    # hst = model.fit_generator(generator, steps_per_epoch=92, epochs=epochs_num, verbose=2, callbacks=callbacks,
-    #                           validation_data=None, validation_steps=None, validation_freq=1, class_weight=None,
-    #                           max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
+    hst = model.fit_generator(training_generator, steps_per_epoch=steps_per_epoch, epochs=epochs_num, verbose=2,
+                              callbacks=callbacks, validation_data=testing_generator,
+                              validation_steps=val_steps_per_epoch, class_weight=None,
+                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 
     end = time.time()
     print("Time Elapsed: "+str(end-start))
@@ -145,6 +171,17 @@ def actions():
         predict_image(seq_model, model_id, batch_num)
         batch_num += 1
     save_model(seq_model, history)
+    print(seq_model.summary())
+
+
+def actions_generator():
+    gpu_setup()
+    seq_model = create_model(1)
+    x, Y = load_files(dataset)
+    history, seq_model = train_model(seq_model, x, Y)
+    # predict_image(seq_model, model_id)
+    save_model(seq_model, history)
+    print(seq_model.summary())
 
 
 if __name__ == "__main__":
@@ -152,6 +189,6 @@ if __name__ == "__main__":
     if usr_input == "y" or usr_input == "Y" or usr_input == "yes":
         schedule()
     elif usr_input == "n" or usr_input == "N" or usr_input == "no":
-        actions()
+        actions_generator()
     else:
         print("Input not recognized.")

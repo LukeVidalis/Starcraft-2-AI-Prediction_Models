@@ -4,7 +4,8 @@ from settings import *
 from PIL import Image
 import numpy as np
 from keras.models import model_from_json
-from matplotlib import pyplot
+import json
+from matplotlib import pyplot as plt
 import sys
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -35,11 +36,36 @@ def evaluate(model):
 
 
 def plot_history(hst):
-    pyplot.title("Loss / Mean Squared Error")
-    pyplot.plot(hst.history["loss"], label="train")
-    pyplot.plot(hst.history["val_loss"], label="test")
-    pyplot.legend()
-    pyplot.show()
+    plt.title("Loss / Mean Squared Error")
+    plt.plot(hst.history["loss"], label="train")
+    plt.plot(hst.history["val_loss"], label="test")
+    plt.legend()
+    plt.show()
+
+
+def load_history():
+    history_file = os.path.join(WEIGHTS_DIR, "history_model_10.json")
+    return json.load(open(history_file, 'r'))
+
+
+def plot_history1(history):
+    print(history.keys())
+    # summarize history for accuracy
+    plt.plot(history['acc'])
+    plt.plot(history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.show()
+    # summarize history for loss
+    plt.plot(history['loss'])
+    plt.plot(history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.show()
 
 
 def predict_image(model, id, batch):
@@ -113,8 +139,9 @@ def checking_in_out_arrays():
     print("Total Output: ", output, " | Expected: ", expected)
 
 
-
 if __name__ == "__main__":
     model = load_json("CNN_model_1.json", "weights_1.h5")
     single_test(model)
     print("Evaluation Complete")
+    hst = load_history()
+    plot_history(hst)
