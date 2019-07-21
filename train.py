@@ -22,8 +22,7 @@ val_split = 0.2
 json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
 weights_file = os.path.join(WEIGHTS_DIR, 'weights_'+str(model_id)+'.h5')
 history_file = os.path.join(WEIGHTS_DIR, 'history_model_' + str(model_id) + '.json')
-
-dataset = "Acid_Plant_0.npz"
+dataset = os.path.join(DATA_DIR, "Acid_Plant_0.npz")
 
 
 def gpu_setup():

@@ -1,6 +1,7 @@
 import os
 import sys
 from emailer import *
+import numpy as np
 # Function to rename multiple files
 def main():
     main_dir = "D:\\Starcraft 2 AI\\New Replays\\"
@@ -54,9 +55,17 @@ def email():
     send_mail(1, 100)
 
 
+def shuffle_arr():
+    x = [[1, 2], [3, 4], [5, 6], [7, 8]]
+    print(x)
+    np.random.shuffle(x)
+    print(x)
+
+
 if __name__ == '__main__':
     # main()
     # sorting()
     # memory()
     # lists()
-    email()
+    # email()
+    shuffle_arr()

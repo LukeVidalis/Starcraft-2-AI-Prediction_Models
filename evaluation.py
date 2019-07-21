@@ -67,6 +67,7 @@ def plot_history1(history):
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
 
+
 def predict_image(model, id, batch):
     proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
     frame = "Acid_Plant_141_frame_1500.png"
