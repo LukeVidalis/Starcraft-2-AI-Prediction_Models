@@ -56,10 +56,18 @@ def email():
 
 
 def shuffle_arr():
-    x = [[1, 2], [3, 4], [5, 6], [7, 8]]
-    print(x)
-    np.random.shuffle(x)
-    print(x)
+    a = [[1, 2], [3, 4], [5, 6], [7, 8]]
+
+    b = [1, 2, 3, 4]
+
+    c = list(zip(a, b))
+
+    np.random.shuffle(c)
+
+    a, b = zip(*c)
+
+    print(a)
+    print(b)
 
 
 if __name__ == '__main__':

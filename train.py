@@ -35,12 +35,18 @@ def gpu_setup():
     k.tensorflow_backend.set_session(tf.Session(config=config))
 
 
-def load_files(dataset, shuffle=True):
+def load_files(data_path, shuffle=True):
     print("Getting Data")
-    data = load_array(dataset)
+    data = load_array(data_path)
+    x_val = data['x']
+    y_val = data['y']
+
     if shuffle:
-        np.random.shuffle(data)
-    return data['x'], data['Y']
+        c = list(zip(x_val, y_val))
+        np.random.shuffle(c)
+        x_val, y_val = zip(*c)
+
+    return x_val, y_val
 
 
 def data_generator(x_data, y_data, bs):
