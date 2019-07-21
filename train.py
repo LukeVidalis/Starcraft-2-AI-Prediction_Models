@@ -13,9 +13,9 @@ import tensorflow as tf
 from keras import backend as k
 
 # Parameters
-model_id = 7
+model_id = 13
 epochs_num = 100
-batch_size = 1
+batch_size = 32
 val_split = 0.2
 
 # Paths
@@ -66,10 +66,13 @@ def data_generator(x_data, y_data, bs):
             images_y.append(y_data[index])
             index += 1
 
-        np.savez("to_predict.npz", x=images_x, Y=images_y)
-        np_arr_2 = np.load("to_predict.npz")
-        images_x = np_arr_2["x"]
-        images_y = np_arr_2["Y"]
+        np.save("x_train.npy", images_x)
+        np.save("y_train.npy", images_y)
+
+        arr_load = np.load("x_train.npy")
+        images_x = arr_load
+        arr_load = np.load("y_train.npy")
+        images_y = arr_load
         yield (images_x, images_y)
 
 
