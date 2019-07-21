@@ -92,13 +92,14 @@ def single_test(model):
     im = Image.open(proj_dir + "\\" + frame)
     np_im = np.array(im, dtype=np.int32)
 
-    np_arr = []
-    np_arr.append(np_im)
-    np.savez("to_predict.npz", x=np_arr)
-    np_arr_2 = np.load("to_predict.npz")
-    np_arr_2 = np_arr_2["x"]
+    # np_arr = []
+    # np_arr.append(np_im)
+    # np.savez("to_predict.npz", x=np_arr)
+    # np_arr_2 = np.load("to_predict.npz")
+    # np_arr_2 = np_arr_2["x"]
+    image = np.expand_dims(np_im, axis=0)
 
-    prediction = model.predict(np_arr_2)
+    prediction = model.predict(image)
     prediction = prediction[0]  # np.resize(out, (128, 128, 3))
 
     prediction = (prediction * 255).astype(np.uint8)
@@ -144,4 +145,4 @@ if __name__ == "__main__":
     single_test(model)
     print("Evaluation Complete")
     hst = load_history()
-    plot_history(hst)
+    # plot_history(hst)
