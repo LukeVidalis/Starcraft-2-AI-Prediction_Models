@@ -23,7 +23,7 @@ json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
 weights_file = os.path.join(WEIGHTS_DIR, 'weights_'+str(model_id)+'.h5')
 history_file = os.path.join(WEIGHTS_DIR, 'history_model_' + str(model_id) + '.json')
 
-# dataset = "Acid_Plant10.npz"
+dataset = "Acid_Plant_0.npz"
 
 
 def gpu_setup():
@@ -87,6 +87,7 @@ def lr_schedule():
 def train_model(model, x, Y):
     print("Training Model")
     split_id = math.floor(len(x)*(1-val_split))
+    steps_per_epoch = math.ceil(len(x)/batch_size)
     training_generator = data_generator(x[:split_id], Y[:split_id], batch_size)
     testing_generator = data_generator(x[split_id:], Y[:split_id], batch_size)
 
@@ -96,13 +97,14 @@ def train_model(model, x, Y):
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
 
-    hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=callbacks,
-                    validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
-                    sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+    # hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=callbacks,
+    #                 validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
+    #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
-    hst = model.fit_generator(training_generator, steps_per_epoch=92, epochs=epochs_num, verbose=2, callbacks=callbacks,
-                              validation_data=testing_generator, validation_steps=None, validation_freq=1, class_weight=None,
-                              max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
+    hst = model.fit_generator(training_generator, steps_per_epoch=steps_per_epoch, epochs=epochs_num, verbose=2,
+                              callbacks=callbacks, validation_data=testing_generator, validation_steps=None,
+                              validation_freq=1, class_weight=None, max_queue_size=10, workers=1,
+                              use_multiprocessing=False, shuffle=True, initial_epoch=0)
 
     end = time.time()
     print("Time Elapsed: "+str(end-start))
@@ -155,6 +157,16 @@ def actions():
         history, seq_model = train_model(seq_model, x, Y)
         predict_image(seq_model, model_id, batch_num)
         batch_num += 1
+    save_model(seq_model, history)
+    print(seq_model.summary())
+
+
+def actions_generator():
+    gpu_setup()
+    seq_model = create_model(1)
+    x, Y = load_files(dataset)
+    history, seq_model = train_model(seq_model, x, Y)
+    # predict_image(seq_model, model_id)
     save_model(seq_model, history)
     print(seq_model.summary())
 
