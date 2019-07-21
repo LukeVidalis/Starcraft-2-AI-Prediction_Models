@@ -23,6 +23,7 @@ json_file = os.path.join(WEIGHTS_DIR, 'CNN_model_'+str(model_id)+'.json')
 weights_file = os.path.join(WEIGHTS_DIR, 'weights_'+str(model_id)+'.h5')
 history_file = os.path.join(WEIGHTS_DIR, 'history_model_' + str(model_id) + '.json')
 dataset = os.path.join(DATA_DIR, "Acid_Plant_0.npz")
+model_checkpoint = os.path.join(WEIGHTS_DIR, 'model_' + str(model_id) + '_checkpoint.h5')
 
 
 def gpu_setup():
@@ -30,7 +31,7 @@ def gpu_setup():
     # Allocate memory as needed. No pre-allocation.
     config.gpu_options.allow_growth = True
     # Allow memory allocation up to this percentage.
-    config.gpu_options.per_process_gpu_memory_fraction = 0.5
+    config.gpu_options.per_process_gpu_memory_fraction = 0.65
     # Create session with the above options.
     k.tensorflow_backend.set_session(tf.Session(config=config))
 
@@ -65,8 +66,10 @@ def data_generator(x_data, y_data, bs):
             images_x.append(x_data[index])
             images_y.append(y_data[index])
 
-        images_x = np.expand_dims(images_x, axis=0)
-        images_y = np.expand_dims(images_y, axis=0)
+        # images_x = np.expand_dims(images_x, axis=0)
+        # images_y = np.expand_dims(images_y, axis=0)
+        images_x = np.array(images_x)
+        images_y = np.array(images_y)
 
         yield (images_x, images_y)
 
@@ -99,7 +102,7 @@ def train_model(model, x, Y):
     steps_per_epoch = math.ceil(len(x[:split_id])/batch_size)
     val_steps_per_epoch = math.ceil(len(x[split_id:])/batch_size)
 
-    callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=WEIGHTS_DIR, monitor='val_loss',
+    callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=model_checkpoint, monitor='val_loss',
                                                                        verbose=1, save_best_only=True)]
 
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
