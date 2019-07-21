@@ -2,6 +2,8 @@ import os
 import sys
 from emailer import *
 import numpy as np
+
+
 # Function to rename multiple files
 def main():
     main_dir = "D:\\Starcraft 2 AI\\New Replays\\"
@@ -70,10 +72,23 @@ def shuffle_arr():
     print(b)
 
 
+def list_iterator():
+    a = [[1, 2, 2], [3, 4, 4], [5, 6, 6], [7, 8, 8]]
+    i = iter(a)
+    test = []
+    while len(test) < 5:
+        try:
+            test.append(next(i))
+        except StopIteration:
+            i = iter(a)
+    print(test)
+
+
 if __name__ == '__main__':
     # main()
     # sorting()
     # memory()
     # lists()
     # email()
-    shuffle_arr()
+    # shuffle_arr()
+    list_iterator()

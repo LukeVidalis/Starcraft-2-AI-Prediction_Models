@@ -177,7 +177,7 @@ def actions():
 def actions_generator():
     gpu_setup()
     seq_model = create_model(1)
-    x, Y = load_files(dataset)
+    x, Y = load_files(dataset, shuffle=False)
     history, seq_model = train_model(seq_model, x, Y)
     # predict_image(seq_model, model_id)
     save_model(seq_model, history)
