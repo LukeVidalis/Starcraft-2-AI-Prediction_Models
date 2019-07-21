@@ -105,29 +105,29 @@ def create_model(model_index):
         deconv_1 = Conv2DTranspose(filters=8, kernel_size=(3, 3), strides=(2, 2), output_padding= None, activation="relu", padding="same")(drop_4)
         deconv_1_norm = BatchNormalization()(deconv_1)
 
-        deconv_2 = Conv2DTranspose(filters=13, kernel_size=(3, 3), strides=(2, 2), output_padding= None, activation="relu", padding="same")(deconv_1_norm)
-        deconv_2_norm = BatchNormalization()(deconv_2)
-
-        deconv_3 = Conv2DTranspose(filters=32, kernel_size=(5, 5), strides=(2, 2), output_padding= None, activation="relu", padding="same")(deconv_2_norm)
-        deconv_3_norm = BatchNormalization()(deconv_3)
-
-        deconv_4 = Conv2DTranspose(filters=64, kernel_size=(7, 7), strides=(2, 2), output_padding= None, activation="relu", padding="same")(deconv_3_norm)
-        deconv_4_norm = BatchNormalization()(deconv_4)
-
         # flatten = Flatten()(drop_4)
-        hidden_layer_1 = Dense(1024, activation="relu")(deconv_4_norm)
+        hidden_layer_1 = Dense(1024, activation="relu")(deconv_1_norm)
         hl_1_norm = BatchNormalization()(hidden_layer_1)
         drop_1 = Dropout(0.3)(hl_1_norm)
 
-        hidden_layer_2 = Dense(512, activation="relu")(drop_1)
+        deconv_2 = Conv2DTranspose(filters=16, kernel_size=(3, 3), strides=(2, 2), output_padding= None, activation="relu", padding="same")(drop_1)
+        deconv_2_norm = BatchNormalization()(deconv_2)
+
+        hidden_layer_2 = Dense(512, activation="relu")(deconv_2_norm)
         hl_2_norm = BatchNormalization()(hidden_layer_2)
         drop_2 = Dropout(0.3)(hl_2_norm)
 
-        hidden_layer_3 = Dense(256, activation="relu")(drop_2)
+        deconv_3 = Conv2DTranspose(filters=32, kernel_size=(5, 5), strides=(2, 2), output_padding= None, activation="relu", padding="same")(drop_2)
+        deconv_3_norm = BatchNormalization()(deconv_3)
+
+        hidden_layer_3 = Dense(256, activation="relu")(deconv_3_norm)
         hl_3_norm = BatchNormalization()(hidden_layer_3)
         drop_3 = Dropout(0.3)(hl_3_norm)
 
-        output_layer = Dense(3, activation="relu")(drop_3)
+        deconv_4 = Conv2DTranspose(filters=64, kernel_size=(7, 7), strides=(2, 2), output_padding= None, activation="relu", padding="same")(drop_3)
+        deconv_4_norm = BatchNormalization()(deconv_4)
+
+        output_layer = Dense(3, activation="relu")(deconv_4_norm)
 
         model = Model(outputs=output_layer, inputs=input_layer)
 
