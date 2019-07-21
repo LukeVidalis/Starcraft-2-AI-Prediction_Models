@@ -60,8 +60,28 @@ def predict_image(model, id, batch):
     save_prediction(prediction, id, batch)
 
 
+def single_test(model):
+    proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
+    frame = "Acid_Plant_141_frame_1500.png"
+    im = Image.open(proj_dir + "\\" + frame)
+    np_im = np.array(im, dtype=np.int32)
+
+    np_arr = []
+    np_arr.append(np_im)
+    np.savez("to_predict.npz", x=np_arr)
+    np_arr_2 = np.load("to_predict.npz")
+    np_arr_2 = np_arr_2["x"]
+
+    prediction = model.predict(np_arr_2)
+    prediction = prediction[0]  # np.resize(out, (128, 128, 3))
+
+    prediction = (prediction * 255).astype(np.uint8)
+    img = Image.fromarray(prediction)
+    img.save("prediction_1.png")
+
+
 def save_prediction(prediction, id, batch):
-    pred_dir = TRAIN_PREDICTION_DIR + "\\Model_" + str(id)
+    pred_dir = PREDICTION_DIR + "\\Model_" + str(id)
     if not os.path.exists(pred_dir):
         os.mkdir(pred_dir)
 
@@ -95,6 +115,6 @@ def checking_in_out_arrays():
 
 
 if __name__ == "__main__":
-    model = load_json("CNN_model_9.json", "weights_9.h5")
-    predict_image(model)
+    model = load_json("CNN_model_1.json", "weights_1.h5")
+    single_test(model)
     print("Evaluation Complete")
