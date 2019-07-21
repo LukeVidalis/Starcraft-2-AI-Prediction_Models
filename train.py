@@ -66,6 +66,10 @@ def data_generator(x_data, y_data, bs):
             images_y.append(y_data[index])
             index += 1
 
+        np.savez("to_predict.npz", x=images_x, Y=images_y)
+        np_arr_2 = np.load("to_predict.npz")
+        images_x = np_arr_2["x"]
+        images_y = np_arr_2["Y"]
         yield (images_x, images_y)
 
 
@@ -109,7 +113,7 @@ def train_model(model, x, Y):
 
     hst = model.fit_generator(training_generator, steps_per_epoch=steps_per_epoch, epochs=epochs_num, verbose=2,
                               callbacks=callbacks, validation_data=testing_generator,
-                              validation_steps=val_steps_per_epoch, validation_freq=1, class_weight=None,
+                              validation_steps=val_steps_per_epoch, class_weight=None,
                               max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 
     end = time.time()
@@ -182,6 +186,6 @@ if __name__ == "__main__":
     if usr_input == "y" or usr_input == "Y" or usr_input == "yes":
         schedule()
     elif usr_input == "n" or usr_input == "N" or usr_input == "no":
-        actions()
+        actions_generator()
     else:
         print("Input not recognized.")
