@@ -64,15 +64,10 @@ def data_generator(x_data, y_data, bs):
 
             images_x.append(x_data[index])
             images_y.append(y_data[index])
-            index += 1
 
-        np.save("x_train.npy", images_x)
-        np.save("y_train.npy", images_y)
+        images_x = np.expand_dims(images_x, axis=0)
+        images_y = np.expand_dims(images_y, axis=0)
 
-        arr_load = np.load("x_train.npy")
-        images_x = arr_load
-        arr_load = np.load("y_train.npy")
-        images_y = arr_load
         yield (images_x, images_y)
 
 
