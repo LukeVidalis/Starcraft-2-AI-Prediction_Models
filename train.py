@@ -50,30 +50,32 @@ def load_files(data_path, shuffle=True):
     return x_val, y_val
 
 
+# Generator method for  fit_generator
 def data_generator(x_data, y_data, bs):
-    # open the CSV file for reading
-    index = 0
-
+    iter_x = iter(x_data)
+    iter_y = iter(y_data)
     # loop indefinitely
     while True:
-        # initialize our batches of images and labels
+        # initialize our batches of input and output
         images_x = []
         images_y = []
 
         # keep looping until we reach our batch size
         while len(images_x) < bs:
+            try:
+                images_x.append(next(iter_x))
+                images_y.append(next(iter_y))
+            except StopIteration:
+                iter_x = iter(x_data)
+                iter_y = iter(y_data)
 
-            images_x.append(x_data[index])
-            images_y.append(y_data[index])
-
-        # images_x = np.expand_dims(images_x, axis=0)
-        # images_y = np.expand_dims(images_y, axis=0)
         images_x = np.array(images_x)
         images_y = np.array(images_y)
 
         yield (images_x, images_y)
 
 
+# Save model structure, weights and history object
 def save_model(model, hst):
     if not os.path.exists(WEIGHTS_DIR):
         os.mkdir(WEIGHTS_DIR)
