@@ -9,4 +9,4 @@ WEIGHTS_DIR = './Model/'
 RESULTS_SAVE_DIR = './Results/'
 
 # Predictions while training will be saved here
-PREDICTION_DIR = './Training_Prediction/'
+PREDICTION_DIR = './Predictions/'

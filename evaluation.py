@@ -86,35 +86,43 @@ def predict_image(model, id, batch):
     save_prediction(prediction, id, batch)
 
 
-def single_test(model):
-    proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
-    frame = "Acid_Plant_141_frame_1500.png"
-    im = Image.open(proj_dir + "\\" + frame)
-    np_im = np.array(im, dtype=np.int32)
+def get_frames(map, replay, range_x, range_y):
+    proj_dir = "D:\\Starcraft 2 AI\\Frames\\" + map
+    frames = []
+    for i in range(range_x, range_y+1):
+        frame = map + "_" + str(replay) + "_frame_" + str(i) + ".png"
+        print(frame)
+        im = Image.open(proj_dir + "\\" + frame)
+        frame = np.array(im, dtype=np.uint8)
+        frames.append(frame)
 
-    # np_arr = []
-    # np_arr.append(np_im)
-    # np.savez("to_predict.npz", x=np_arr)
-    # np_arr_2 = np.load("to_predict.npz")
-    # np_arr_2 = np_arr_2["x"]
-    image = np.expand_dims(np_im, axis=0)
+    np.save("to_predict.npy", frames)
+    frames = np.load("to_predict.npy")
 
-    prediction = model.predict(image)
+    return frames
+
+def single_test(id, map, replay, range_x, range_y):
+    model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
+
+    frames = get_frames(map, replay, range_x, range_y)
+
+    prediction = model.predict(frames)
     prediction = prediction[0]  # np.resize(out, (128, 128, 3))
 
-    prediction = (prediction * 255).astype(np.uint8)
-    img = Image.fromarray(prediction)
-    img.save("prediction_1.png")
+    save_prediction(prediction, id, map, replay, range_x, range_y)
+    # prediction = (prediction).astype(np.uint8)
+    # img = Image.fromarray(prediction)
+    # img.save("prediction_01a.png")
 
 
-def save_prediction(prediction, id, batch):
+def save_prediction(prediction, id, map, replay, range_x, range_y):
     pred_dir = PREDICTION_DIR + "\\Model_" + str(id)
     if not os.path.exists(pred_dir):
         os.mkdir(pred_dir)
 
-    prediction = (prediction * 255).astype(np.uint8)
+    prediction = (prediction).astype(np.uint8)
     img = Image.fromarray(prediction)
-    img.save(pred_dir + "prediction_" + str(batch) + ".png")
+    img.save(pred_dir + "\\prediction_" + map + "_" + str(replay) + "_" + str(range_x) + "to" + str(range_y) + ".png")
 
     # ByteBuffer buffer = ByteBuffer.wrap(os.toByteArray());
     # buffer.rewind();
@@ -141,8 +149,8 @@ def checking_in_out_arrays():
 
 
 if __name__ == "__main__":
-    model = load_json("CNN_model_1.json", "weights_1.h5")
-    single_test(model)
+    # model = load_json("CNN_model_01.json", "weights_01.h5")
+    single_test(17, "Acid_Plant", 141, 1496, 1496)
     print("Evaluation Complete")
-    hst = load_history()
+    # hst = load_history()
     # plot_history(hst)
