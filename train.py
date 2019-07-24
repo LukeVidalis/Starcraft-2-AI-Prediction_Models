@@ -26,6 +26,7 @@ dataset = os.path.join(DATA_DIR, "Acid_Plant_0.npz")
 model_checkpoint = os.path.join(WEIGHTS_DIR, 'model_' + str(model_id) + '_checkpoint.h5')
 
 
+# Set up GPU parameters for training
 def gpu_setup():
     config = tf.ConfigProto()
     # Allocate memory as needed. No pre-allocation.
@@ -36,7 +37,8 @@ def gpu_setup():
     k.tensorflow_backend.set_session(tf.Session(config=config))
 
 
-def load_files(data_path, shuffle=True):
+# Load the training and testing data and split them with the option to shuffle
+def load_files(data_path, shuffle=False):
     print("Getting Data")
     data = load_array(data_path)
     x_val = data['x']
@@ -92,10 +94,12 @@ def save_model(model, hst):
         hist_df.to_json(f)
 
 
+# Callback for learning rate adjustment
 def lr_schedule():
     return lambda epoch: 0.001 if epoch < 75 else 0.0001
 
 
+# Training Method
 def train_model(model, x, Y):
     print("Training Model")
     split_id = math.floor(len(x)*(1-val_split))
@@ -123,24 +127,8 @@ def train_model(model, x, Y):
     print("Time Elapsed: "+str(end-start))
     return hst, model
 
-    # x: Input
-    # y: Output
-    # batch_size: number of samples per gradient update
-    # epochs: number of epochs to train the model
-    # verbose: Verbosity mode (0, 1 OR 2)
-    # callbacks: callbacks to apply during training TODO: Look into callbacks
-    # validation_split: Fraction of the training data to be used as validation data
-    # validation_data: Data to perform validation on
-    # shuffle:  shuffle the training data before each epoch
-    # class_weight: dictionary for adding weight to different classes
-    # sample_weight: array of sample weights
-    # initial_epoch: epoch at which to start training. Useful for resuming a previous training run.
-    # steps_per_epoch: total number of steps (batches of samples) before declaring one epoch finished and
-    # starting the next epoch.
-    # validation_steps: if steps_per_epoch != None, total number of steps to validate before stopping
-    # validation_freq: run validation every x epochs. ( if validation_data != None)
 
-
+# Method to schedule training
 def schedule():
     now = datetime.today()
     while True:
@@ -151,33 +139,18 @@ def schedule():
             print("Please write the time in HHMM format.")
     total_time = target - now
     secs = total_time.seconds+1
-    t = Timer(secs, actions)
+    t = Timer(secs, actions_generator)
     hours = int(secs / 3600)
     mins = (secs - (3600*hours))/60
     print("Timer started: "+str(hours)+" hours and "+str(mins)+" minutes remaining.")
     t.start()
 
 
-def actions():
-    gpu_setup()
-    batch_num = 0
-    file_list = [f for f in listdir(DATA_DIR) if isfile(join(DATA_DIR, f))]
-    seq_model = create_model(1)
-    history = None
-    for file in file_list:
-        print("Current Batch: "+str(batch_num))
-        x, Y = load_files(file)
-        history, seq_model = train_model(seq_model, x, Y)
-        predict_image(seq_model, model_id, batch_num)
-        batch_num += 1
-    save_model(seq_model, history)
-    print(seq_model.summary())
-
-
+# Goes through the training process
 def actions_generator():
     gpu_setup()
     seq_model = create_model(1)
-    x, Y = load_files(dataset, shuffle=False)
+    x, Y = load_files(dataset)
     history, seq_model = train_model(seq_model, x, Y)
     # predict_image(seq_model, model_id)
     save_model(seq_model, history)
