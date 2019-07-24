@@ -16,7 +16,7 @@ def load(filename):
     print(json_file)
     mod = load_model("D:\\Starcraft 2 AI\\Model\\CNN_mode_luke.json")
     print(weight_file)
-    # mod.load_weights("D:\\Starcraft 2 AI\\Model\\model1_luke.json")
+
     return mod
 
 
@@ -31,8 +31,6 @@ def load_json(filename, weightname):
     return mod
 
 
-def evaluate(model):
-    " code here "
 
 
 def plot_history(hst):
@@ -81,7 +79,7 @@ def predict_image(model, id, batch):
     np_arr_2 = np_arr_2["x"]
 
     prediction = model.predict(np_arr_2)
-    prediction = prediction[0]  # np.resize(out, (128, 128, 3))
+    prediction = prediction[0]
 
     save_prediction(prediction, id, batch)
 
@@ -109,6 +107,7 @@ def single_test(id, map, replay, range_x, range_y):
     prediction = model.predict(frames)
     prediction = prediction[0]  # np.resize(out, (128, 128, 3))
 
+
     save_prediction(prediction, id, map, replay, range_x, range_y)
     # prediction = (prediction).astype(np.uint8)
     # img = Image.fromarray(prediction)
@@ -123,12 +122,6 @@ def save_prediction(prediction, id, map, replay, range_x, range_y):
     prediction = (prediction).astype(np.uint8)
     img = Image.fromarray(prediction)
     img.save(pred_dir + "\\prediction_" + map + "_" + str(replay) + "_" + str(range_x) + "to" + str(range_y) + ".png")
-
-    # ByteBuffer buffer = ByteBuffer.wrap(os.toByteArray());
-    # buffer.rewind();
-    # bitmap_tmp.copyPixelsFromBuffer(buffer);
-    # img = image.array_to_img(out)
-    # img.save("predict_2.png")
 
 
 def checking_in_out_arrays():
