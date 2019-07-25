@@ -44,28 +44,32 @@ def load_history():
     return json.load(open(history_file, 'r'))
 
 
-def plot_history1(history, model_id):
+def plot_history1(his, model_id):
     if not os.path.exists(PLOT_DIR):
         os.mkdir(PLOT_DIR)
-    print(history.keys())
+
+    acc_file = os.path.join(PLOT_DIR, 'history_plot_acc_'+str(model_id)+'.png')
+    loss_file = os.path.join(PLOT_DIR, 'history_plot_loss_'+str(model_id)+'.png')
+
+    history = his.history
+
     # summarize history for accuracy
     plt.plot(history['acc'])
     plt.plot(history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('accuracy')
+    plt.title('Model '+str(model_id)+' Accuracy')
+    plt.ylabel('Accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    plt.savefig(acc_file)
+
     # summarize history for loss
     plt.plot(history['loss'])
     plt.plot(history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
+    plt.title('Model '+str(model_id)+' Loss')
+    plt.ylabel('Loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
-    plt.savefig()
-    plt.savefig('history_plot_'+str(model_id)+'.png')
+    plt.savefig(loss_file)
 
 
 # def predict_image(model, id, batch):
@@ -90,7 +94,7 @@ def get_frames(map_name, replay, range_x, range_y):
     frames = []
     for i in range(range_x, range_y+1):
         frame = map_name + "_" + str(replay) + "_frame_" + str(i) + ".png"
-        print(frame)
+        # print(frame)
         im = Image.open(proj_dir + "\\" + frame)
         frame = np.array(im, dtype=np.uint8)
         frames.append(frame)
