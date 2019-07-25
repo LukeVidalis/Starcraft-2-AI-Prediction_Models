@@ -31,8 +31,6 @@ def load_json(filename, weightname):
     return mod
 
 
-
-
 def plot_history(hst):
     plt.title("Loss / Mean Squared Error")
     plt.plot(hst.history["loss"], label="train")
@@ -72,8 +70,7 @@ def predict_image(model, id, batch):
     im = Image.open(proj_dir + "\\" + frame)
     np_im = np.array(im, dtype=np.int32)
 
-    np_arr = []
-    np_arr.append(np_im)
+    np_arr = [np_im]
     np.savez("to_predict.npz", x=np_arr)
     np_arr_2 = np.load("to_predict.npz")
     np_arr_2 = np_arr_2["x"]
@@ -84,11 +81,11 @@ def predict_image(model, id, batch):
     save_prediction(prediction, id, batch)
 
 
-def get_frames(map, replay, range_x, range_y):
-    proj_dir = "D:\\Starcraft 2 AI\\Frames\\" + map
+def get_frames(map_name, replay, range_x, range_y):
+    proj_dir = "D:\\Starcraft 2 AI\\Frames\\" + map_name
     frames = []
     for i in range(range_x, range_y+1):
-        frame = map + "_" + str(replay) + "_frame_" + str(i) + ".png"
+        frame = map_name + "_" + str(replay) + "_frame_" + str(i) + ".png"
         print(frame)
         im = Image.open(proj_dir + "\\" + frame)
         frame = np.array(im, dtype=np.uint8)
@@ -99,29 +96,26 @@ def get_frames(map, replay, range_x, range_y):
 
     return frames
 
-def single_test(id, map, replay, range_x, range_y):
-    model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
 
-    frames = get_frames(map, replay, range_x, range_y)
+def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
+    model = load_json("CNN_model_" + str(model_id) + ".json", "weights_" + str(model_id) + ".h5")
+
+    frames = get_frames(map_name, replay, lower_bound, upper_bound)
 
     prediction = model.predict(frames)
-    prediction = prediction[0]  # np.resize(out, (128, 128, 3))
+    prediction = prediction[0]
+
+    save_prediction(prediction, model_id, map_name, replay, lower_bound, upper_bound)
 
 
-    save_prediction(prediction, id, map, replay, range_x, range_y)
-    # prediction = (prediction).astype(np.uint8)
-    # img = Image.fromarray(prediction)
-    # img.save("prediction_01a.png")
-
-
-def save_prediction(prediction, id, map, replay, range_x, range_y):
-    pred_dir = PREDICTION_DIR + "\\Model_" + str(id)
+def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0):
+    pred_dir = PREDICTION_DIR + "\\Model_" + str(model_id)
     if not os.path.exists(pred_dir):
         os.mkdir(pred_dir)
 
-    prediction = (prediction).astype(np.uint8)
+    prediction = prediction.astype(np.uint8)
     img = Image.fromarray(prediction)
-    img.save(pred_dir + "\\prediction_" + map + "_" + str(replay) + "_" + str(range_x) + "to" + str(range_y) + ".png")
+    img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "to" + str(upper_bound) + ".png")
 
 
 def checking_in_out_arrays():
