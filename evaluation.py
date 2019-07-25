@@ -64,25 +64,25 @@ def plot_history1(history):
     plt.show()
 
 
-def predict_image(model, id, batch):
-    proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
-    frame = "Acid_Plant_141_frame_1500.png"
-    im = Image.open(proj_dir + "\\" + frame)
-    np_im = np.array(im, dtype=np.int32)
-
-    np_arr = [np_im]
-    np.savez("to_predict.npz", x=np_arr)
-    np_arr_2 = np.load("to_predict.npz")
-    np_arr_2 = np_arr_2["x"]
-
-    prediction = model.predict(np_arr_2)
-    prediction = prediction[0]
-
-    save_prediction(prediction, id, batch)
+# def predict_image(model, id, batch):
+#     proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
+#     frame = "Acid_Plant_141_frame_1500.png"
+#     im = Image.open(proj_dir + "\\" + frame)
+#     np_im = np.array(im, dtype=np.int32)
+#
+#     np_arr = [np_im]
+#     np.savez("to_predict.npz", x=np_arr)
+#     np_arr_2 = np.load("to_predict.npz")
+#     np_arr_2 = np_arr_2["x"]
+#
+#     prediction = model.predict(np_arr_2)
+#     prediction = prediction[0]
+#
+#     save_prediction(prediction, id, batch)
 
 
 def get_frames(map_name, replay, range_x, range_y):
-    proj_dir = "D:\\Starcraft 2 AI\\Frames\\" + map_name
+    proj_dir = FRAMES_DIR + map_name
     frames = []
     for i in range(range_x, range_y+1):
         frame = map_name + "_" + str(replay) + "_frame_" + str(i) + ".png"
@@ -91,8 +91,7 @@ def get_frames(map_name, replay, range_x, range_y):
         frame = np.array(im, dtype=np.uint8)
         frames.append(frame)
 
-    np.save("to_predict.npy", frames)
-    frames = np.load("to_predict.npy")
+    frames = np.array(frames)
 
     return frames
 
@@ -108,14 +107,33 @@ def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
     save_prediction(prediction, model_id, map_name, replay, lower_bound, upper_bound)
 
 
-def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0):
-    pred_dir = PREDICTION_DIR + "\\Model_" + str(model_id)
+def callback_predict(model, model_id, epoch_num):
+    replay = 141
+    lower_bound = 500
+    upper_bound = 505
+    map_name = "Acid_Plant"
+    frames = get_frames(map_name, replay, lower_bound, upper_bound)
+
+    prediction = model.predict(frames)
+    prediction = prediction[0]  # todo check array
+
+    save_prediction(prediction, model_id, map_name, replay, lower_bound=lower_bound, upper_bound=upper_bound,
+                    epoch_num=epoch_num)
+
+
+def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None):
+    pred_dir = os.path.join(PREDICTION_DIR, "Model_" + str(model_id))
     if not os.path.exists(pred_dir):
         os.mkdir(pred_dir)
 
     prediction = prediction.astype(np.uint8)
     img = Image.fromarray(prediction)
-    img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "to" + str(upper_bound) + ".png")
+    if epoch_num is None:
+        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
+                 str(upper_bound) + ".png")
+    else:
+        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
+                 str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
 
 
 def checking_in_out_arrays():
@@ -137,7 +155,7 @@ def checking_in_out_arrays():
 
 if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
-    single_test(17, "Acid_Plant", 141, 1496, 1496)
+    single_test(10, "Acid_Plant", 141, 1496, 1498)
     print("Evaluation Complete")
     # hst = load_history()
     # plot_history(hst)
