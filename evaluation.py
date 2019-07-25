@@ -44,7 +44,9 @@ def load_history():
     return json.load(open(history_file, 'r'))
 
 
-def plot_history1(history):
+def plot_history1(history, model_id):
+    if not os.path.exists(PLOT_DIR):
+        os.mkdir(PLOT_DIR)
     print(history.keys())
     # summarize history for accuracy
     plt.plot(history['acc'])
@@ -62,6 +64,8 @@ def plot_history1(history):
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
+    plt.savefig()
+    plt.savefig('history_plot_'+str(model_id)+'.png')
 
 
 # def predict_image(model, id, batch):

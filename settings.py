@@ -11,5 +11,8 @@ RESULTS_SAVE_DIR = './Results/'
 # Predictions while training will be saved here
 PREDICTION_DIR = './Predictions/'
 
-# Predictions while training will be saved here
+# Images of frames are located here
 FRAMES_DIR = './Frames/'
+
+# Plots of history objects will be saved here
+PLOT_DIR = './Plots/'
