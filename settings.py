@@ -16,3 +16,6 @@ FRAMES_DIR = './Frames/'
 
 # Plots of history objects will be saved here
 PLOT_DIR = './Plots/'
+
+# Plots of metrics will be saved here
+METRICS_DIR = './Metrics/'

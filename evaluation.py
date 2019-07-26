@@ -7,6 +7,7 @@ import numpy as np
 from keras.models import model_from_json, load_model
 import json
 from matplotlib import pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from skimage import img_as_float
 from skimage.measure import compare_ssim as ssim
 from skimage.measure import compare_psnr as psnr
@@ -124,7 +125,7 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
 
     pred_img = img_as_float(pred_img)
     expected_img = img_as_float(expected_img)
-    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
+    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(13, 4))
     ax = axes.ravel()
 
     mse_base = mse(expected_img, expected_img)
@@ -146,8 +147,15 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
     ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
     ax[1].set_title('Predicted Output')
 
+    lum_img = get_pixel_error(pred_img, expected_img)
+    cb = ax[2].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
+    ax[2].set_title('Difference Heat Map')
+    divider = make_axes_locatable(ax[2])
+
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+
+    fig.colorbar(cb, cax=cax, ax=ax[2])
     plt.tight_layout()
-    plt.title("Image Metrics")
 
     if save_plot:
         if filename is not None:
@@ -160,7 +168,20 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
             save_file = os.path.join(METRICS_DIR, "metrics_plot_"+datetime.today().strftime('%Y-%m-%d %H_%M_%S')+".png")
             plt.savefig(save_file)
     if show_plot:
-            plt.show()
+        plt.show()
+
+
+def get_pixel_error(img1, img2):
+
+    # Calculate the absolute difference on each channel separately
+    error_r = np.fabs(np.subtract(img2[:, :, 0], img1[:, :, 0]))
+    error_g = np.fabs(np.subtract(img2[:, :, 1], img1[:, :, 1]))
+    error_b = np.fabs(np.subtract(img2[:, :, 2], img1[:, :, 2]))
+
+    # Calculate the maximum error for each pixel
+    lum_img = np.maximum(np.maximum(error_r, error_g), error_b)
+
+    return lum_img
 
 
 def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None):
