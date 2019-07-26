@@ -1,12 +1,15 @@
-from keras.models import load_model
 import os
+import sys
+from datetime import datetime
 from settings import *
 from PIL import Image
 import numpy as np
-from keras.models import model_from_json
+from keras.models import model_from_json, load_model
 import json
 from matplotlib import pyplot as plt
-import sys
+from skimage import img_as_float
+from skimage.measure import compare_ssim as ssim
+from skimage.measure import compare_psnr as psnr
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -72,23 +75,6 @@ def plot_history1(his, model_id):
     plt.savefig(loss_file)
 
 
-# def predict_image(model, id, batch):
-#     proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
-#     frame = "Acid_Plant_141_frame_1500.png"
-#     im = Image.open(proj_dir + "\\" + frame)
-#     np_im = np.array(im, dtype=np.int32)
-#
-#     np_arr = [np_im]
-#     np.savez("to_predict.npz", x=np_arr)
-#     np_arr_2 = np.load("to_predict.npz")
-#     np_arr_2 = np_arr_2["x"]
-#
-#     prediction = model.predict(np_arr_2)
-#     prediction = prediction[0]
-#
-#     save_prediction(prediction, id, batch)
-
-
 def get_frames(map_name, replay, range_x, range_y):
     proj_dir = FRAMES_DIR + map_name
     frames = []
@@ -123,10 +109,48 @@ def callback_predict(model, model_id, epoch_num):
     frames = get_frames(map_name, replay, lower_bound, upper_bound)
 
     prediction = model.predict(frames)
-    prediction = prediction[0]  # todo check array
+    prediction = prediction[0]
 
     save_prediction(prediction, model_id, map_name, replay, lower_bound=lower_bound, upper_bound=upper_bound,
                     epoch_num=epoch_num)
+
+
+def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
+    pred_img = Image.open(y_hat)
+    expected_img = Image.open(y)
+
+    pred_img = img_as_float(pred_img)
+    expected_img = img_as_float(expected_img)
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
+    ax = axes.ravel()
+
+    mse_base = mse(expected_img, expected_img)
+    ssim_base = ssim(expected_img, expected_img, data_range=expected_img.max() - expected_img.min(), multichannel=True)
+    psnr_base = psnr(expected_img, expected_img)
+
+    mse_pred = mse(pred_img, expected_img)
+    ssim_pred = ssim(pred_img, expected_img,
+                     data_range=pred_img.max() - pred_img.min(), multichannel=True)
+    psnr_pred = psnr(pred_img, expected_img)
+
+    label = 'MSE: {:.2f}, SSIM: {:.2f} PSNR: {:.2f}'
+
+    ax[0].imshow(pred_img, vmin=0, vmax=1)
+    ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base))
+    ax[0].set_title('Expected Image')
+
+    ax[1].imshow(expected_img, vmin=0, vmax=1)
+    ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
+    ax[1].set_title('Predicted Output')
+
+    plt.tight_layout()
+    if show_plot:
+        plt.show()
+    if save_plot:
+        if filename is not None:
+            plt.savefig(filename)
+        else:
+            plt.savefig(datetime.today().strftime('%Y-%m-%d %H_%M_%S.%f')[:-3]+".png")
 
 
 def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None):
@@ -144,26 +168,14 @@ def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper
                  str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
 
 
-def checking_in_out_arrays():
-    input = 0
-    output = 0
-    for i in range(52):
-        file = "D:\\Starcraft 2 AI\\Numpy_Frames\\Acid_Plant\\Acid_Plant_" + str(i) + ".npz"
-        ws = np.load(file)
-        ina = ws["x"]
-        oua = ws["Y"]
-        print("File: ", i, " ->", len(ina), " ", len(oua))
-        input += len(ina)
-        output += len(oua)
-
-    expected = 311852 - 121
-    print("Total Input: ", input, " | Expected: ", expected)
-    print("Total Output: ", output, " | Expected: ", expected)
+def mse(x, y):
+    return np.linalg.norm(x - y)
 
 
 if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
-    single_test(10, "Acid_Plant", 141, 1496, 1498)
+    # single_test(10, "Acid_Plant", 141, 1496, 1498)
+    image_metrics("output.png", "prediction.png", save_plot=True)
     print("Evaluation Complete")
     # hst = load_history()
     # plot_history(hst)
