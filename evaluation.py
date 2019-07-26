@@ -91,6 +91,32 @@ def get_frames(map_name, replay, range_x, range_y):
     return frames
 
 
+
+def future_frames_test(id, map, replay, range_x, range_y, future):
+    model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
+
+    # frames = "D:\\Starcraft 2 AI\\Input Frames\\Abyssal_Reef_0_frame_0.png"
+    # im = Image.open(frames)
+    frames = get_frames(map, replay, range_x, range_y)
+    # np_im = np.array(im, dtype=np.int32)
+    # np_arr = []
+    # np_arr.append(np_im)
+    # np.savez("to_predict.npz", x=np_arr)
+    # np_arr_2 = np.load("to_predict.npz")
+    # np_arr_2 = np_arr_2["x"]
+    prediction = frames
+    for i in range(1, future):
+        prediction = model.predict(prediction)
+        p = prediction[0]
+        save_prediction(p, id, map, replay, i, i)
+        # prediction = prediction[0]  # np.resize(out, (128, 128, 3))
+
+
+    # save_prediction(prediction, id, map, replay, range_x, range_y)
+    # prediction = (prediction).astype(np.uint8)
+    # img = Image.fromarray(prediction)
+    # img.save("prediction_01a.png")
+
 def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
     model = load_json("CNN_model_" + str(model_id) + ".json", "weights_" + str(model_id) + ".h5")
 
@@ -205,6 +231,7 @@ def mse(x, y):
 
 if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
+    single_test(15, "Acid_Plant", 141, 1500, 1500)
     # single_test(10, "Acid_Plant", 141, 1496, 1498)
     image_metrics("output.png", "prediction.png", save_plot=True)
     print("Evaluation Complete")

@@ -561,3 +561,82 @@ Acid_Plant_96.SC2Replay was not completed. Error:
 Acid_Plant_97.SC2Replay was not completed. Error: 
 Acid_Plant_98.SC2Replay was not completed. Error: 
 Acid_Plant_99.SC2Replay was not completed. Error: 
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:30:45.912864
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:31:19.750340
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:33:28.091346
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:36:17.850567
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:36:50.261445
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:41:57.370987
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:42:12.781201
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:46:05.190200
+Catalyst_0.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_1.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_100.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_101.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_102.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_103.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+-------------------------Error Log--------------------------
+Process Started at: 2019-07-25 18:51:56.728127
+Catalyst_0.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_1.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_101.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_102.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_106.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_107.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_12.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_13.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_14.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_19.SC2Replay was not completed. Error: Missing Base: II\Versio
+Catalyst_21.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_22.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_23.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_29.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_30.SC2Replay was not completed. Error: Invalid file header.
+Catalyst_32.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_35.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_37.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_4.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_40.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_42.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_47.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_51.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_53.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_54.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_56.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_57.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_58.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_59.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_6.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_61.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_63.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_64.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_65.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_67.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_68.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_7.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_70.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_71.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_73.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_74.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_75.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_76.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_77.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_78.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_79.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_83.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_84.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_85.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_86.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_88.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_93.SC2Replay was not completed. Error: Unknown game version: 4.0.2. 
+Catalyst_94.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_96.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
+Catalyst_99.SC2Replay was not completed. Error: <class 'pysc2.lib.remote_controller.RequestError'>
