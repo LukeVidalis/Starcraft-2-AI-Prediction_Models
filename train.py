@@ -8,10 +8,10 @@ from CNN import create_model
 import pandas as pd
 from settings import *
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
-from evaluation import predict_image
+from callbacks import CallbackPred
 import tensorflow as tf
 from keras import backend as k
-
+from evaluation import plot_history1
 # Parameters
 model_id = 13
 epochs_num = 100
@@ -109,7 +109,8 @@ def train_model(model, x, Y):
     val_steps_per_epoch = math.ceil(len(x[split_id:])/batch_size)
 
     callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=model_checkpoint, monitor='val_loss',
-                                                                       verbose=1, save_best_only=True)]
+                                                                       verbose=1, save_best_only=True),
+                 CallbackPred(period=10, model_id=model_id)]
 
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
@@ -125,6 +126,7 @@ def train_model(model, x, Y):
 
     end = time.time()
     print("Time Elapsed: "+str(end-start))
+    plot_history1(hst, model_id)
     return hst, model
 
 

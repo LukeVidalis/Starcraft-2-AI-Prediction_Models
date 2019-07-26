@@ -1,12 +1,15 @@
-from keras.models import load_model
 import os
+import sys
+from datetime import datetime
 from settings import *
 from PIL import Image
 import numpy as np
-from keras.models import model_from_json
+from keras.models import model_from_json, load_model
 import json
 from matplotlib import pyplot as plt
-import sys
+from skimage import img_as_float
+from skimage.measure import compare_ssim as ssim
+from skimage.measure import compare_psnr as psnr
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -31,8 +34,6 @@ def load_json(filename, weightname):
     return mod
 
 
-
-
 def plot_history(hst):
     plt.title("Loss / Mean Squared Error")
     plt.plot(hst.history["loss"], label="train")
@@ -46,61 +47,51 @@ def load_history():
     return json.load(open(history_file, 'r'))
 
 
-def plot_history1(history):
-    print(history.keys())
+def plot_history1(his, model_id):
+    if not os.path.exists(PLOT_DIR):
+        os.mkdir(PLOT_DIR)
+
+    acc_file = os.path.join(PLOT_DIR, 'history_plot_acc_'+str(model_id)+'.png')
+    loss_file = os.path.join(PLOT_DIR, 'history_plot_loss_'+str(model_id)+'.png')
+
+    history = his.history
+
     # summarize history for accuracy
     plt.plot(history['acc'])
     plt.plot(history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('accuracy')
+    plt.title('Model '+str(model_id)+' Accuracy')
+    plt.ylabel('Accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    plt.savefig(acc_file)
+
     # summarize history for loss
     plt.plot(history['loss'])
     plt.plot(history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
+    plt.title('Model '+str(model_id)+' Loss')
+    plt.ylabel('Loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    plt.savefig(loss_file)
 
 
-def predict_image(model, id, batch):
-    proj_dir = "D:\\Starcraft 2 AI\\Frames\\Acid_Plant"
-    frame = "Acid_Plant_141_frame_1500.png"
-    im = Image.open(proj_dir + "\\" + frame)
-    np_im = np.array(im, dtype=np.int32)
-
-    np_arr = []
-    np_arr.append(np_im)
-    np.savez("to_predict.npz", x=np_arr)
-    np_arr_2 = np.load("to_predict.npz")
-    np_arr_2 = np_arr_2["x"]
-
-    prediction = model.predict(np_arr_2)
-    prediction = prediction[0]
-
-    save_prediction(prediction, id, batch)
-
-
-def get_frames(map, replay, range_x, range_y):
-    proj_dir = "D:\\Starcraft 2 AI\\Frames\\" + map
+def get_frames(map_name, replay, range_x, range_y):
+    proj_dir = FRAMES_DIR + map_name
     frames = []
     for i in range(range_x, range_y+1):
-        frame = map + "_" + str(replay) + "_frame_" + str(i) + ".png"
-        print(frame)
+        frame = map_name + "_" + str(replay) + "_frame_" + str(i) + ".png"
+        # print(frame)
         im = Image.open(proj_dir + "\\" + frame)
         frame = np.array(im, dtype=np.uint8)
         frames.append(frame)
 
-    np.save("to_predict.npy", frames)
-    frames = np.load("to_predict.npy")
+    frames = np.array(frames)
 
     return frames
 
 
-def single_test(id, map, replay, range_x, range_y, future):
+
+def future_frames_test(id, map, replay, range_x, range_y, future):
     model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
 
     # frames = "D:\\Starcraft 2 AI\\Input Frames\\Abyssal_Reef_0_frame_0.png"
@@ -125,37 +116,103 @@ def single_test(id, map, replay, range_x, range_y, future):
     # img = Image.fromarray(prediction)
     # img.save("prediction_01a.png")
 
+def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
+    model = load_json("CNN_model_" + str(model_id) + ".json", "weights_" + str(model_id) + ".h5")
 
-def save_prediction(prediction, id, map, replay, range_x, range_y):
-    pred_dir = PREDICTION_DIR + "\\Model_" + str(id)
+    frames = get_frames(map_name, replay, lower_bound, upper_bound)
+
+    prediction = model.predict(frames)
+    prediction = prediction[0]
+
+    save_prediction(prediction, model_id, map_name, replay, lower_bound, upper_bound)
+
+
+def callback_predict(model, model_id, epoch_num):
+    replay = 141
+    lower_bound = 500
+    upper_bound = 505
+    map_name = "Acid_Plant"
+    frames = get_frames(map_name, replay, lower_bound, upper_bound)
+
+    prediction = model.predict(frames)
+    prediction = prediction[0]
+
+    save_prediction(prediction, model_id, map_name, replay, lower_bound=lower_bound, upper_bound=upper_bound,
+                    epoch_num=epoch_num)
+
+
+def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
+    if not os.path.exists(METRICS_DIR):
+        os.mkdir(METRICS_DIR)
+
+    pred_img = Image.open(y_hat)
+    expected_img = Image.open(y)
+
+    pred_img = img_as_float(pred_img)
+    expected_img = img_as_float(expected_img)
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
+    ax = axes.ravel()
+
+    mse_base = mse(expected_img, expected_img)
+    ssim_base = ssim(expected_img, expected_img, data_range=expected_img.max() - expected_img.min(), multichannel=True)
+    psnr_base = 0  # No way to calculate it as you would have to divide by 0 in the process.
+
+    mse_pred = mse(pred_img, expected_img)
+    ssim_pred = ssim(pred_img, expected_img,
+                     data_range=pred_img.max() - pred_img.min(), multichannel=True)
+    psnr_pred = psnr(pred_img, expected_img)
+
+    label = 'MSE: {:.2f}, SSIM: {:.2f}, PSNR: {:.2f}dB'
+
+    ax[0].imshow(pred_img, vmin=0, vmax=1)
+    ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
+    ax[0].set_title('Expected Image')
+
+    ax[1].imshow(expected_img, vmin=0, vmax=1)
+    ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
+    ax[1].set_title('Predicted Output')
+
+    plt.tight_layout()
+    plt.title("Image Metrics")
+
+    if save_plot:
+        if filename is not None:
+            if filename[:-4] != ".png":
+                filename = filename + ".png"
+            save_file = os.path.join(METRICS_DIR, filename)
+
+            plt.savefig(save_file)
+        else:
+            save_file = os.path.join(METRICS_DIR, "metrics_plot_"+datetime.today().strftime('%Y-%m-%d %H_%M_%S')+".png")
+            plt.savefig(save_file)
+    if show_plot:
+            plt.show()
+
+
+def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None):
+    pred_dir = os.path.join(PREDICTION_DIR, "Model_" + str(model_id))
     if not os.path.exists(pred_dir):
         os.mkdir(pred_dir)
 
-    prediction = (prediction).astype(np.uint8)
+    prediction = prediction.astype(np.uint8)
     img = Image.fromarray(prediction)
-    img.save(pred_dir + "\\prediction_" + map + "_" + str(replay) + "_" + str(range_x) + "to" + str(range_y) + ".png")
+    if epoch_num is None:
+        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
+                 str(upper_bound) + ".png")
+    else:
+        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
+                 str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
 
 
-def checking_in_out_arrays():
-    input = 0
-    output = 0
-    for i in range(52):
-        file = "D:\\Starcraft 2 AI\\Numpy_Frames\\Acid_Plant\\Acid_Plant_" + str(i) + ".npz"
-        ws = np.load(file)
-        ina = ws["x"]
-        oua = ws["Y"]
-        print("File: ", i, " ->", len(ina), " ", len(oua))
-        input += len(ina)
-        output += len(oua)
-
-    expected = 311852 - 121
-    print("Total Input: ", input, " | Expected: ", expected)
-    print("Total Output: ", output, " | Expected: ", expected)
+def mse(x, y):
+    return np.linalg.norm(x - y)
 
 
 if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
     single_test(15, "Acid_Plant", 141, 1500, 1500)
+    # single_test(10, "Acid_Plant", 141, 1496, 1498)
+    image_metrics("output.png", "prediction.png", save_plot=True)
     print("Evaluation Complete")
     # hst = load_history()
     # plot_history(hst)

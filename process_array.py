@@ -72,5 +72,22 @@ def process_images():
     # print("\nAll Frames: " + str(len(all_frames)))
 
 
+def checking_in_out_arrays():
+    input = 0
+    output = 0
+    for i in range(52):
+        file = "D:\\Starcraft 2 AI\\Numpy_Frames\\Acid_Plant\\Acid_Plant_" + str(i) + ".npz"
+        ws = np.load(file)
+        ina = ws["x"]
+        oua = ws["Y"]
+        print("File: ", i, " ->", len(ina), " ", len(oua))
+        input += len(ina)
+        output += len(oua)
+
+    expected = 311852 - 121
+    print("Total Input: ", input, " | Expected: ", expected)
+    print("Total Output: ", output, " | Expected: ", expected)
+
+
 if __name__ == "__main__":
     process_images()
