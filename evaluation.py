@@ -116,6 +116,9 @@ def callback_predict(model, model_id, epoch_num):
 
 
 def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
+    if not os.path.exists(METRICS_DIR):
+        os.mkdir(METRICS_DIR)
+
     pred_img = Image.open(y_hat)
     expected_img = Image.open(y)
 
@@ -126,17 +129,17 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
 
     mse_base = mse(expected_img, expected_img)
     ssim_base = ssim(expected_img, expected_img, data_range=expected_img.max() - expected_img.min(), multichannel=True)
-    psnr_base = psnr(expected_img, expected_img)
+    psnr_base = 0  # No way to calculate it as you would have to divide by 0 in the process.
 
     mse_pred = mse(pred_img, expected_img)
     ssim_pred = ssim(pred_img, expected_img,
                      data_range=pred_img.max() - pred_img.min(), multichannel=True)
     psnr_pred = psnr(pred_img, expected_img)
 
-    label = 'MSE: {:.2f}, SSIM: {:.2f} PSNR: {:.2f}'
+    label = 'MSE: {:.2f}, SSIM: {:.2f}, PSNR: {:.2f}dB'
 
     ax[0].imshow(pred_img, vmin=0, vmax=1)
-    ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base))
+    ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
     ax[0].set_title('Expected Image')
 
     ax[1].imshow(expected_img, vmin=0, vmax=1)
@@ -144,13 +147,20 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
     ax[1].set_title('Predicted Output')
 
     plt.tight_layout()
-    if show_plot:
-        plt.show()
+    plt.title("Image Metrics")
+
     if save_plot:
         if filename is not None:
-            plt.savefig(filename)
+            if filename[:-4] != ".png":
+                filename = filename + ".png"
+            save_file = os.path.join(METRICS_DIR, filename)
+
+            plt.savefig(save_file)
         else:
-            plt.savefig(datetime.today().strftime('%Y-%m-%d %H_%M_%S.%f')[:-3]+".png")
+            save_file = os.path.join(METRICS_DIR, "metrics_plot_"+datetime.today().strftime('%Y-%m-%d %H_%M_%S')+".png")
+            plt.savefig(save_file)
+    if show_plot:
+            plt.show()
 
 
 def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None):
