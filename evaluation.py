@@ -99,16 +99,28 @@ def get_frames(map, replay, range_x, range_y):
 
     return frames
 
-def single_test(id, map, replay, range_x, range_y):
+
+def single_test(id, map, replay, range_x, range_y, future):
     model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
 
+    # frames = "D:\\Starcraft 2 AI\\Input Frames\\Abyssal_Reef_0_frame_0.png"
+    # im = Image.open(frames)
     frames = get_frames(map, replay, range_x, range_y)
+    # np_im = np.array(im, dtype=np.int32)
+    # np_arr = []
+    # np_arr.append(np_im)
+    # np.savez("to_predict.npz", x=np_arr)
+    # np_arr_2 = np.load("to_predict.npz")
+    # np_arr_2 = np_arr_2["x"]
+    prediction = frames
+    for i in range(1, future):
+        prediction = model.predict(prediction)
+        p = prediction[0]
+        save_prediction(p, id, map, replay, i, i)
+        # prediction = prediction[0]  # np.resize(out, (128, 128, 3))
 
-    prediction = model.predict(frames)
-    prediction = prediction[0]  # np.resize(out, (128, 128, 3))
 
-
-    save_prediction(prediction, id, map, replay, range_x, range_y)
+    # save_prediction(prediction, id, map, replay, range_x, range_y)
     # prediction = (prediction).astype(np.uint8)
     # img = Image.fromarray(prediction)
     # img.save("prediction_01a.png")
@@ -143,7 +155,7 @@ def checking_in_out_arrays():
 
 if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
-    single_test(17, "Acid_Plant", 141, 1496, 1496)
+    single_test(15, "Acid_Plant", 141, 1500, 1500)
     print("Evaluation Complete")
     # hst = load_history()
     # plot_history(hst)

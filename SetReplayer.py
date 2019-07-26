@@ -66,15 +66,14 @@ def set_flags():
     flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
 
-def main():
+def main(unused):
     set_flags()
     log_init()
-    proj_dir = "D:\\Starcraft 2 AI\\New Replays\\Acid_Plant"
+    proj_dir = "D:\\Starcraft 2 AI\\New Replays\\Catalyst"
     file_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
     # print(file_list)
     for filename in file_list:
         try:
-            print("Replay: "+filename)
             image_list = load_replay(proj_dir, filename)
             create_images(image_list, filename)
             gc.collect()
@@ -86,7 +85,7 @@ def main():
         except pysc2.lib.sc_process.SC2LaunchError:
             print(sys.exc_info())
             error = str(sys.exc_info()[1])
-            error = "Missing Base: "+error[49:58]
+            error = "Missing Base: " + error[49:58]
             print(error)
             log_error(error, filename)
             print()
@@ -114,18 +113,13 @@ def main():
             log_error(error, filename)
             print()
 
-    """
-    image_list = load_replay(proj_dir, "Acid_Plant_11.SC2Replay")
-    create_images(image_list, "Acid_Plant_11.SC2Replay")
-    """
-
 
 def create_images(minimap_list, filename):
     i = 0
     file = filename[:-10]
     for entry in minimap_list:
         proj_dir = os.path.dirname(os.path.abspath(__file__))
-        Image.fromarray(entry.astype('uint8')).save(proj_dir+'\\Frames\\Acid_Plant\\'+file+'_frame_'+str(i)+'.png')
+        Image.fromarray(entry.astype('uint8')).save(proj_dir+'\\Frames\\Catalyst\\'+file+'_frame_'+str(i)+'.png')
         i = i + 1
 
 
@@ -140,9 +134,6 @@ def log_init():
     file1.write("Error Log".center(60, "-"))
     file1.write("\nProcess Started at: "+str(datetime.datetime.now())+"\n")
     file1.close()
-
-
-#agent_obs = None
 
 
 def load_replay(proj_dir, filename):
@@ -207,15 +198,13 @@ def load_replay(proj_dir, filename):
 
         # agent_interface = features.AgentInterfaceFormat(sc2_env.Dimensions(screen=64, minimap=64),
         # actions.spatial(None, actions.ActionSpace.RGB))
-        interface = features.AgentInterfaceFormat(rgb_dimensions=Dimensions(128, 128))
+        interface = features.AgentInterfaceFormat(rgb_dimensions=Dimensions(64, 64))
         _features = features.Features(interface)
         # features = features.features_from_game_info(controller.game_info())
         minimap = []
         while True:
             controller.step(step_mul)
             obs = controller.observe()
-
-            # global agent_obs
             # agent_obs = features.transform_obs(obs)
             try:
                 agent_obs = _features.transform_obs(obs)
@@ -241,6 +230,7 @@ def load_replay(proj_dir, filename):
             if obs.player_result:
                 break
 
+            # _state = StepType.MID
     return minimap
 
 
