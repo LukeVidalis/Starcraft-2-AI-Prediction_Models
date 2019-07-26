@@ -221,10 +221,62 @@ def create_model(model_index):
         model.compile(loss="mean_squared_error", optimizer=opt, metrics=['acc'])
         model.summary()
 
+    elif model_index == 6:
+        input_layer = Input(shape=(128, 128, 3))
+        in_norm = BatchNormalization()(input_layer)
+
+        conv_1 = Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same")(in_norm)
+        conv_1_norm = BatchNormalization()(conv_1)
+
+        conv_2 = Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same")(conv_1_norm)
+        conv_1_norm = BatchNormalization()(conv_2)
+
+        conv_3 = Conv2D(filters=64, kernel_size=(5, 5), strides=(2, 2), activation="relu", padding="same")(conv_1_norm)
+        conv_1_norm = BatchNormalization()(conv_3)
+
+        conv_4 = Conv2D(filters=128, kernel_size=(7, 7), strides=(2, 2), activation="relu", padding="same")(conv_1_norm)
+        conv_1_norm = BatchNormalization()(conv_4)
+
+        hidden_layer_1 = Dense(1024, activation="relu")(conv_1_norm)
+        hl_1_norm = BatchNormalization()(hidden_layer_1)
+        drop_1 = Dropout(0.2)(hl_1_norm)
+
+        hidden_layer_2 = Dense(2048)(drop_1)
+        hl_2_norm = BatchNormalization()(hidden_layer_2)
+        drop_2 = Dropout(0.25)(hl_2_norm)
+
+        hidden_layer_3 = Dense(2048)(drop_2)
+        hl_3_norm = BatchNormalization()(hidden_layer_3)
+        drop_3 = Dropout(0.25)(hl_3_norm)
+
+        hidden_layer_4 = Dense(1024, activation="relu")(drop_3)
+        hl_4_norm = BatchNormalization()(hidden_layer_4)
+        drop_4 = Dropout(0.2)(hl_4_norm)
+
+        deconv_1 = Conv2DTranspose(filters=128, kernel_size=(7, 7), strides=(2, 2), output_padding= None, activation="relu", padding="same")(drop_4)
+        deconv_1_norm = BatchNormalization()(deconv_1)
+
+        deconv_2 = Conv2DTranspose(filters=64, kernel_size=(5, 5), strides=(2, 2), output_padding= None, activation="relu", padding="same")(deconv_1_norm)
+        deconv_2_norm = BatchNormalization()(deconv_2)
+
+        deconv_3 = Conv2DTranspose(filters=32, kernel_size=(3, 3), strides=(2, 2), output_padding= None, activation="relu", padding="same")(deconv_2_norm)
+        deconv_3_norm = BatchNormalization()(deconv_3)
+
+        deconv_4 = Conv2DTranspose(filters=16, kernel_size=(3, 3), strides=(2, 2), output_padding= None, activation="relu", padding="same")(deconv_3_norm)
+        deconv_4_norm = BatchNormalization()(deconv_4)
+
+        output_layer = Dense(3, activation="relu")(deconv_4_norm)
+
+        model = Model(outputs=output_layer, inputs=input_layer)
+
+        opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0.0001, amsgrad=False)
+        model.compile(loss="mean_squared_error", optimizer=opt, metrics=['acc'])
+        model.summary()
     return model
 
+
 if __name__ == "__main__":
-    create_model(3)
+    create_model(6)
 
 
 
