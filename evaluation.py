@@ -65,7 +65,7 @@ def plot_history1(his, model_id):
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.savefig(acc_file)
-
+    plt.clf()
     # summarize history for loss
     plt.plot(history['loss'])
     plt.plot(history['val_loss'])
@@ -139,18 +139,19 @@ def callback_predict(model, model_id, epoch_num):
     prediction = prediction[0]
 
     save_prediction(prediction, model_id, map_name, replay, lower_bound=lower_bound, upper_bound=upper_bound,
-                    epoch_num=epoch_num)
+                    epoch_num=epoch_num, y_true=frames[0])
 
 
-def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
+def image_metrics(y_true, y_pred, show_plot=True, save_plot=False, filename=None):
     if not os.path.exists(METRICS_DIR):
         os.mkdir(METRICS_DIR)
 
-    pred_img = Image.open(y_hat)
-    expected_img = Image.open(y)
-
-    pred_img = img_as_float(pred_img)
+    expected_img = Image.open(y_true)
     expected_img = img_as_float(expected_img)
+
+    pred_img = Image.open(y_pred)
+    pred_img = img_as_float(pred_img)
+
     fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(13, 4))
     ax = axes.ravel()
 
@@ -165,11 +166,11 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
 
     label = 'MSE: {:.2f}, SSIM: {:.2f}, PSNR: {:.2f}dB'
 
-    ax[0].imshow(pred_img, vmin=0, vmax=1)
+    ax[0].imshow(expected_img, vmin=0, vmax=1)
     ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
     ax[0].set_title('Ground Truth')
 
-    ax[1].imshow(expected_img, vmin=0, vmax=1)
+    ax[1].imshow(pred_img, vmin=0, vmax=1)
     ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
     ax[1].set_title('Predicted Output')
 
@@ -212,19 +213,27 @@ def get_pixel_error(img1, img2):
     return lum_img
 
 
-def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None):
+def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None, y_true=None):
     pred_dir = os.path.join(PREDICTION_DIR, "Model_" + str(model_id))
+    if not os.path.exists(PREDICTION_DIR):
+        os.mkdir(PREDICTION_DIR)
     if not os.path.exists(pred_dir):
         os.mkdir(pred_dir)
-
     prediction = prediction.astype(np.uint8)
     img = Image.fromarray(prediction)
     if epoch_num is None:
-        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
-                 str(upper_bound) + ".png")
+        save_path = os.path.join(PREDICTION_DIR, "/prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
+                                 + "-" + str(upper_bound) + ".png")
+
+        img.save(save_path)
     else:
-        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
-                 str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
+        save_path = os.path.join(PREDICTION_DIR, "/prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
+                                 + "-" + str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
+
+        img.save(save_path)
+        if y_true is not None:
+            metric_filename = "Model_" + str(model_id) + "_Epoch_" + epoch_num
+            image_metrics(y_true, save_path, show_plot=False, save_plot=True, filename=metric_filename)
 
 
 def mse(x, y):
@@ -237,5 +246,4 @@ if __name__ == "__main__":
     # single_test(10, "Acid_Plant", 141, 1496, 1498)
     image_metrics("output.png", "prediction.png", save_plot=True)
     print("Evaluation Complete")
-    # hst = load_history()
-    # plot_history(hst)
+
