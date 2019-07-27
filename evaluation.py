@@ -167,7 +167,7 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
 
     ax[0].imshow(pred_img, vmin=0, vmax=1)
     ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
-    ax[0].set_title('Expected Image')
+    ax[0].set_title('Ground Truth')
 
     ax[1].imshow(expected_img, vmin=0, vmax=1)
     ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
@@ -195,6 +195,8 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
             plt.savefig(save_file)
     if show_plot:
         plt.show()
+
+    return mse_pred, ssim_pred, psnr_pred
 
 
 def get_pixel_error(img1, img2):
