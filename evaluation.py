@@ -138,7 +138,7 @@ def callback_predict(model, model_id, epoch_num):
     prediction = prediction[0]
 
     save_prediction(prediction, model_id, map_name, replay, lower_bound=lower_bound, upper_bound=upper_bound,
-                    epoch_num=epoch_num, y_true=frames[0])
+                    epoch_num=epoch_num, y_true="input.png")
 
 
 def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filename=None):
@@ -265,12 +265,12 @@ def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper
     prediction = prediction.astype(np.uint8)
     img = Image.fromarray(prediction)
     if epoch_num is None:
-        save_path = os.path.join(PREDICTION_DIR, "/prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
+        save_path = os.path.join(pred_dir, "prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
                                  + "-" + str(upper_bound) + ".png")
 
         img.save(save_path)
     else:
-        save_path = os.path.join(PREDICTION_DIR, "/prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
+        save_path = os.path.join(pred_dir, "prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
                                  + "-" + str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
 
         img.save(save_path)
@@ -287,6 +287,6 @@ if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
     # single_test(15, "Acid_Plant", 141, 1500, 1500)
     # single_test(10, "Acid_Plant", 141, 1496, 1498)
-    image_metrics("output.png", "prediction.png", save_plot=True, x="input.png")
+    mse_pred, ssim_pred, psnr_pred = image_metrics("output.png", "prediction.png", save_plot=False, show_plot=False)
     print("Evaluation Complete")
 
