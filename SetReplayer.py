@@ -1,14 +1,11 @@
 import pysc2
 from pysc2.lib import features, actions, point_flag
-from os import listdir
-from os.path import isfile, join
 import getpass
 import datetime
 import json
 import platform
 import sys
 import os
-from PIL import Image
 from absl import app, flags
 import mpyq
 import six
@@ -19,10 +16,11 @@ from pysc2.env.environment import TimeStep, StepType
 from pysc2.run_configs import lib as run_configs_lib
 from s2clientprotocol import sc2api_pb2 as sc_pb
 import gc
+from process_array import *
 
 FLAGS = flags.FLAGS
 
-
+# Method to set the flags
 def set_flags():
     flags.DEFINE_bool("render", True, "Whether to render with pygame.")
     flags.DEFINE_bool("realtime", False, "Whether to run in realtime mode.")
@@ -53,7 +51,7 @@ def set_flags():
     flags.DEFINE_enum("difficulty", "very_easy", sc2_env.Difficulty._member_names_,  # pylint: disable=protected-access
                       "Bot's strength.")
     flags.DEFINE_bool("disable_fog", False, "Disable fog of war.")
-    flags.DEFINE_integer("observed_player", 0, "Which player to observe.")
+    flags.DEFINE_integer("observed_player", 1, "Which player to observe.")
 
     flags.DEFINE_bool("profile", False, "Whether to turn on code profiling.")
     flags.DEFINE_bool("trace", False, "Whether to trace the code execution.")
@@ -65,70 +63,85 @@ def set_flags():
     flags.DEFINE_string("map_path", None, "Override the map for this replay.")
     flags.DEFINE_string("replay", None, "Name of a replay to show.")
 
-
+# Main method to play the replays available, and extract he information
 def main(unused):
     set_flags()
     log_init()
-    proj_dir = "D:\\Starcraft 2 AI\\New Replays\\Catalyst"
-    file_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
-    # print(file_list)
-    for filename in file_list:
-        try:
-            image_list = load_replay(proj_dir, filename)
-            create_images(image_list, filename)
-            gc.collect()
-        except pysc2.lib.remote_controller.RequestError:
-            print("Oops!", sys.exc_info(), "occurred.")
-            print("Next entry.")
-            log_error(sys.exc_info()[0], filename)
-            print()
-        except pysc2.lib.sc_process.SC2LaunchError:
-            print(sys.exc_info())
-            error = str(sys.exc_info()[1])
-            error = "Missing Base: " + error[49:58]
-            print(error)
-            log_error(error, filename)
-            print()
-        except pysc2.lib.protocol.ConnectionError:
-            print("Oops!", sys.exc_info(), "occurred.")
-            print("Next entry.")
-            log_error(sys.exc_info()[0], filename)
-            print()
-        except UnboundLocalError:
-            print(sys.exc_info())
-            log_error(sys.exc_info()[0], filename)
-            print()
-        except ValueError:
-            print("Oops!", sys.exc_info(), "occurred.")
-            error = str(sys.exc_info()[1])
-            error = error[:29]
-            print("Next entry.")
-            log_error(error, filename)
-            print()
-        except MemoryError:
-            print("Oops!", sys.exc_info(), "occurred.")
-            error = str(sys.exc_info()[1])
-            error = error[:29]
-            print("Next entry.")
-            log_error(error, filename)
-            print()
+    maps = ["Acid_Plant"]
+    for i in maps:
+        proj_dir = "D:\\Starcraft 2 AI\\New Replays\\" + i
+        file_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
+        for filename in file_list:
+            try:
+                image_list = load_replay(proj_dir, filename)
+                create_images(image_list, filename, i)
+                break
+                gc.collect()
+            except pysc2.lib.remote_controller.RequestError:
+                print("Oops!", sys.exc_info(), "occurred.")
+                print("Next entry.")
+                log_error(sys.exc_info()[0], filename)
+                print()
+            except pysc2.lib.sc_process.SC2LaunchError:
+                print(sys.exc_info())
+                error = str(sys.exc_info()[1])
+                error = "Missing Base: " + error[49:58]
+                print(error)
+                log_error(error, filename)
+                print()
+            except pysc2.lib.protocol.ConnectionError:
+                print("Oops!", sys.exc_info(), "occurred.")
+                print("Next entry.")
+                log_error(sys.exc_info()[0], filename)
+                print()
+            except UnboundLocalError:
+                print(sys.exc_info())
+                log_error(sys.exc_info()[0], filename)
+                print()
+            except ValueError:
+                print("Oops!", sys.exc_info(), "occurred.")
+                error = str(sys.exc_info()[1])
+                error = error[:29]
+                print("Next entry.")
+                log_error(error, filename)
+                print()
+            except MemoryError:
+                print("Oops!", sys.exc_info(), "occurred.")
+                error = str(sys.exc_info()[1])
+                error = error[:29]
+                print("Next entry.")
+                log_error(error, filename)
+                print()
+            except pysc2.lib.remote_controller.ConnectError:
+                print("Oops!", sys.exc_info(), "occurred.")
+                error = str(sys.exc_info()[1])
+                error = error[:29]
+                print("Next entry.")
+                log_error(error, filename)
+                print()
 
 
-def create_images(minimap_list, filename):
-    i = 0
-    file = filename[:-10]
-    for entry in minimap_list:
-        proj_dir = os.path.dirname(os.path.abspath(__file__))
-        Image.fromarray(entry.astype('uint8')).save(proj_dir+'\\Frames\\Catalyst\\'+file+'_frame_'+str(i)+'.png')
-        i = i + 1
+# Method to transform and save minimap numpy frames as images
+def create_images(minimap_list, filename, map_r):
+    if minimap_list != "Error":
+        i = 0
+        file = filename[:-10]
+        for entry in minimap_list:
+            proj_dir = os.path.dirname(os.path.abspath(__file__))
+            Image.fromarray(entry.astype('uint8')).save(proj_dir+'\\Frames\\'+map_r+'\\'+file+'_frame_'+str(i)+'.png')
+            i = i + 1
+    else:
+        log_error("Error - Images where repeated", filename)
 
 
+# Method to log replay errors
 def log_error(code, filename):
     file1 = open("error_log.txt", "a")  # append mode
     file1.write(filename + " was not completed. Error: "+str(code)+"\n")
     file1.close()
 
 
+# Method to register the start of the session in the error_log file
 def log_init():
     file1 = open("error_log.txt", "a")  # append mode
     file1.write("Error Log".center(60, "-"))
@@ -136,6 +149,7 @@ def log_init():
     file1.close()
 
 
+# Method to load, play, observe and extract information from replays
 def load_replay(proj_dir, filename):
 
     path = proj_dir + "\\" + filename
@@ -192,26 +206,19 @@ def load_replay(proj_dir, filename):
             start_replay.map_data = run_config.map_data(map_path)
         controller.start_replay(start_replay)
 
-        # agent_interface = features.AgentInterfaceFormat([64,64], 2)
-
         actions.ActionSpace.RGB
 
-        # agent_interface = features.AgentInterfaceFormat(sc2_env.Dimensions(screen=64, minimap=64),
-        # actions.spatial(None, actions.ActionSpace.RGB))
         interface = features.AgentInterfaceFormat(rgb_dimensions=Dimensions(64, 64))
         _features = features.Features(interface)
-        # features = features.features_from_game_info(controller.game_info())
         minimap = []
+        _state = StepType.FIRST
         while True:
             controller.step(step_mul)
             obs = controller.observe()
-            # agent_obs = features.transform_obs(obs)
             try:
                 agent_obs = _features.transform_obs(obs)
             except:
                 pass
-
-            _state = StepType.MID
 
             if obs.player_result:
                 _state = StepType.LAST
@@ -224,16 +231,25 @@ def load_replay(proj_dir, filename):
             step = TimeStep(step_type=_state, reward=0,
                             discount=discount, observation=agent_obs)
 
-            # minimap.append(agent.step(step, obs, filename))
-            minimap.append(step.observation["rgb_minimap"])
+            current_obs = step.observation["rgb_minimap"]
+
+            if len(minimap) != 0:
+                if np.array_equal(current_obs, minimap[len(minimap)-1]):
+                    return "Error"
+                else:
+                    minimap.append(step.observation["rgb_minimap"])
+            else:
+                minimap.append(step.observation["rgb_minimap"])
 
             if obs.player_result:
                 break
 
-            # _state = StepType.MID
+            _state = StepType.MID
+
     return minimap
 
 
+# Method to get the version of the replay
 def get_replay_version(replay_data):
     replay_io = six.BytesIO()
     replay_io.write(replay_data)

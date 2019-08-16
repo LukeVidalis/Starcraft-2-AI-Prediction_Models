@@ -79,42 +79,55 @@ def plot_history1(his, model_id):
 def get_frames(map_name, replay, range_x, range_y):
     proj_dir = FRAMES_DIR + map_name
     frames = []
-    for i in range(range_x, range_y+1):
+    for i in range(range_x, range_y):
         frame = map_name + "_" + str(replay) + "_frame_" + str(i) + ".png"
         # print(frame)
         im = Image.open(proj_dir + "\\" + frame)
         frame = np.array(im, dtype=np.uint8)
         frames.append(frame)
+    pred = []
+    pred.append(frames)
+    pred = np.array(pred, dtype=np.uint8)
 
-    frames = np.array(frames)
-
-    return frames
+    return pred, frames
 
 
-def future_frames_test(id, map, replay, range_x, range_y, future):
+def test_RNN(id, map, replay, lower_bound, upper_bound):
     model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
+    frames = get_frames(map, replay, lower_bound, upper_bound)
+    prediction = model.predict(frames)
+    p = prediction[0]
+    save_prediction(p, id, map, replay, lower_bound, upper_bound)
 
-    # frames = "D:\\Starcraft 2 AI\\Input Frames\\Abyssal_Reef_0_frame_0.png"
-    # im = Image.open(frames)
+
+def future_frames_CNN(map, replay, range_x, range_y, future):
+    model = load_json("CNN_model_8_bp.json", "weights_8_ct.h5")
+
     frames = get_frames(map, replay, range_x, range_y)
-    # np_im = np.array(im, dtype=np.int32)
-    # np_arr = []
-    # np_arr.append(np_im)
-    # np.savez("to_predict.npz", x=np_arr)
-    # np_arr_2 = np.load("to_predict.npz")
-    # np_arr_2 = np_arr_2["x"]
     prediction = frames
-    for i in range(1, future):
+    for i in range(0, future):
         prediction = model.predict(prediction)
         p = prediction[0]
-        save_prediction(p, id, map, replay, i, i)
-        # prediction = prediction[0]  # np.resize(out, (128, 128, 3))
+        img = Image.fromarray(p.astype('uint8'))
+        img.save("D:\\Starcraft 2 AI\\Results\\Buildings\\Prediction_" + str(i) + ".png")
 
 
-    # save_prediction(prediction, id, map, replay, range_x, range_y)
-    # prediction = (prediction).astype(np.uint8)
-    # img = Image.fromarray(prediction)
-    # img.save("prediction_01a.png")
+def future_frames_RNN(map, replay, range_x, range_y, future):
+    model = load_json("CNN_model_9_CT7.json", "weights_9_CT7.h5")
+
+    frames, f = get_frames(map, replay, range_x, range_y)
+    prediction = frames
+    for i in range(0, future):
+        pred = model.predict(prediction)
+        p = pred[0]
+        img = Image.fromarray(p.astype('uint8'))
+        img.save("D:\\Starcraft 2 AI\\Results\\Future_Frames\\Prediction_" + str(i) + ".png")
+        f.pop()
+        f.append(p)
+        prediction = []
+        prediction.append(f)
+        prediction = np.array(prediction, dtype=np.uint8)
+
 
 def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
     model = load_json("CNN_model_" + str(model_id) + ".json", "weights_" + str(model_id) + ".h5")
@@ -153,6 +166,7 @@ def callback_predict(model, model_id, epoch_num):
 
 
 def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filename=None, input_array=False):
+
     if not os.path.exists(METRICS_DIR):
         os.mkdir(METRICS_DIR)
     if not input_array:
@@ -223,6 +237,7 @@ def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filen
 
             cax = divider.append_axes("right", size="5%", pad=0.05)
 
+
             fig.colorbar(cb, cax=cax, ax=ax[2])
         else:
             ax[0].imshow(expected_img, vmin=0, vmax=1)
@@ -248,6 +263,7 @@ def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filen
                 if filename[:-4] != ".png":
                     filename = filename + ".png"
                 save_file = os.path.join(METRICS_DIR, filename)
+
 
                 plt.savefig(save_file)
             else:
@@ -303,6 +319,6 @@ if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
     # single_test(15, "Acid_Plant", 141, 1500, 1500)
     single_test(100, "Catalyst", 105, 1200, 1201)
+
     mse_pred, ssim_pred, psnr_pred = image_metrics("output.png", "prediction.png", save_plot=False, show_plot=False)
     print("Evaluation Complete")
-
