@@ -4,26 +4,59 @@ from os.path import isfile, join
 from PIL import Image
 
 
+# Method to save the numpy arrays in a file
 def save_array(filename, x, Y):
 
     np.savez(filename, x=x, Y=Y)
 
 
+# Method to load numpy files
 def load_array(filename):
     arr = np.load(filename)
     return arr
 
 
-def process_images():
+# Method to proccess the data for the ConvLSTM model
+def process_images_RNN(r_map, type, lower_bound, upper_bound):
     input_frames = []
     output_frames = []
-    all_frames = []
 
-    proj_dir = "D:\\Starcraft 2 AI\\Frames\\Catalyst"
-    save_dir = "D:\\Starcraft 2 AI\\Numpy_Frames\\Acid_Plant"
+    proj_dir = "D:\\Starcraft 2 AI\\Frames\\"+r_map
     frames_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
 
-    for i in range(0, 101):
+    for i in range(0, 7):
+        replay = "_" + str(i) + "_f"
+
+        if any(replay in s for s in frames_list):
+            matching = [s for s in frames_list if replay in s]
+            print("\nReplay " + str(i))
+            for j in range(len(matching)):
+                if j + 7 < len(matching):
+                    seq = []
+                    for k in range(j, j+6, 2):
+                        frame = r_map + "_" + str(i) + "_frame_" + str(k) + ".png"
+                        im = Image.open(proj_dir + "\\" + frame)
+                        np_im = np.array(im)
+                        seq.append(np_im)
+                    input_frames.append(seq)
+                    frame = r_map + "_" + str(i) + "_frame_" + str(j+7) + ".png"
+                    im = Image.open(proj_dir + "\\" + frame)
+                    np_im = np.array(im)
+                    output_frames.append(np_im)
+
+    save_name = r_map + "_" + type + "_RNN"
+    save_array(save_name, input_frames, output_frames)
+
+
+# Method to proccess the data for the CNN model
+def process_images_CNN(r_map, type, lower_bound, upper_bound):
+    input_frames = []
+    output_frames = []
+
+    proj_dir = "D:\\Starcraft 2 AI\\Frames\\"+r_map
+    frames_list = [f for f in listdir(proj_dir) if isfile(join(proj_dir, f))]
+
+    for i in range(lower_bound, upper_bound):
         replay = "_" + str(i) + "_f"
         input = []
         output = []
@@ -33,7 +66,7 @@ def process_images():
             print("\nReplay " + str(i))
 
             for j in range(len(matching)):
-                frame = "Catalyst_" + str(i) + "_frame_" + str(j) + ".png"
+                frame = r_map + "_" + str(i) + "_frame_" + str(j) + ".png"
                 im = Image.open(proj_dir + "\\" + frame)
                 np_im = np.array(im)
                 input.append(np_im)
@@ -47,31 +80,11 @@ def process_images():
             input_frames += input
             output_frames += output
 
-    # print(len(input_frames))
-    # print(len(output_frames))
-    #
-    # for i in range(len(input_frames)):
-    #     print(input_frames[i], " -> ", output_frames[i])
-
-            # if len(input_frames) >= 5884 and len(output_frames) >= 5884:
-            #     print("Creating Batch")
-            #     file_name = save_dir + "\\Acid_Plant_" + str(file_number)
-            #     in_arr = input_frames[:5884]
-            #     out_arr = output_frames[:5884]
-            #     save_array(file_name, in_arr, out_arr)
-            #     input_frames = input_frames[5885:]
-            #     output_frames = output_frames[5885:]
-            #     print(len(input_frames))
-            #     print(len(output_frames))
-            #     file_number += 1
-
-    # file_name = save_dir + "\\Acid_Plant_" + str(file_number)
-    save_array("Catalyst_Train", input_frames, output_frames)
-    # print("\ninput_frames: " + str(len(input_frames)))
-    # print("\noutput_frames: " + str(len(output_frames)))
-    # print("\nAll Frames: " + str(len(all_frames)))
+    save_name = r_map + "_" + type + "_CNN"
+    save_array(save_name, input_frames, output_frames)
 
 
+# Method to check the sizes of the arrays
 def checking_in_out_arrays():
     input = 0
     output = 0
@@ -90,4 +103,4 @@ def checking_in_out_arrays():
 
 
 if __name__ == "__main__":
-    process_images()
+    process_images_RNN("Port_Aleksandrer", "Test", 0, 11)
