@@ -76,12 +76,12 @@ def plot_history1(his, model_id):
     plt.savefig(loss_file)
 
 
+# Method to get the frames for the testing
 def get_frames(map_name, replay, range_x, range_y):
     proj_dir = FRAMES_DIR + map_name
     frames = []
     for i in range(range_x, range_y):
         frame = map_name + "_" + str(replay) + "_frame_" + str(i) + ".png"
-        # print(frame)
         im = Image.open(proj_dir + "\\" + frame)
         frame = np.array(im, dtype=np.uint8)
         frames.append(frame)
@@ -92,14 +92,7 @@ def get_frames(map_name, replay, range_x, range_y):
     return pred, frames
 
 
-def test_RNN(id, map, replay, lower_bound, upper_bound):
-    model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
-    frames = get_frames(map, replay, lower_bound, upper_bound)
-    prediction = model.predict(frames)
-    p = prediction[0]
-    save_prediction(p, id, map, replay, lower_bound, upper_bound)
-
-
+# Method to make CNN predictions. future parameter determines the number of prediction in the future
 def future_frames_CNN(map, replay, range_x, range_y, future):
     model = load_json("CNN_model_8_bp.json", "weights_8_ct.h5")
 
@@ -112,6 +105,7 @@ def future_frames_CNN(map, replay, range_x, range_y, future):
         img.save("D:\\Starcraft 2 AI\\Results\\Buildings\\Prediction_" + str(i) + ".png")
 
 
+# Method to make ConvLSTM predictions. future parameter determines the number of prediction in the future
 def future_frames_RNN(map, replay, range_x, range_y, future):
     model = load_json("CNN_model_9_CT7.json", "weights_9_CT7.h5")
 
@@ -127,17 +121,6 @@ def future_frames_RNN(map, replay, range_x, range_y, future):
         prediction = []
         prediction.append(f)
         prediction = np.array(prediction, dtype=np.uint8)
-
-
-def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
-    model = load_json("CNN_model_" + str(model_id) + ".json", "weights_" + str(model_id) + ".h5")
-
-    frames = get_frames(map_name, replay, lower_bound, upper_bound)
-
-    prediction = model.predict(frames)
-    prediction = prediction[0]
-
-    save_prediction(prediction, model_id, map_name, replay, lower_bound, upper_bound)
 
 
 def callback_predict(model, model_id, epoch_num):
