@@ -94,7 +94,6 @@ def get_frames(map_name, replay, range_x, range_y):
 
 def test_RNN(id, map, replay, lower_bound, upper_bound):
     model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
-
     frames = get_frames(map, replay, lower_bound, upper_bound)
     prediction = model.predict(frames)
     p = prediction[0]
@@ -219,6 +218,31 @@ def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=True, filena
         ax[5].set_title('Difference Heat Map')
         divider = make_axes_locatable(ax[5])
 
+        ax[1].imshow(expected_img, vmin=0, vmax=1)
+        ax[1].set_xlabel(label.format(mse_input, ssim_input, psnr_input))
+        ax[1].set_title('Ground Truth')
+
+        lum_input_img = get_pixel_error(input_img, expected_img)
+        cb = ax[2].imshow(lum_input_img, vmin=0, vmax=1, cmap='jet')
+        ax[2].set_title('Input/Output Difference Heat Map')
+        divider = make_axes_locatable(ax[2])
+
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+
+        fig.colorbar(cb, cax=cax, ax=ax[2])
+        ax[3].imshow(expected_img, vmin=0, vmax=1)
+        ax[3].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6] + "infinity")
+        ax[3].set_title('Ground Truth')
+
+        ax[4].imshow(pred_img, vmin=0, vmax=1)
+        ax[4].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
+        ax[4].set_title('Predicted Output')
+
+        lum_img = get_pixel_error(pred_img, expected_img)
+        cb = ax[5].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
+        ax[5].set_title('Difference Heat Map')
+        divider = make_axes_locatable(ax[5])
+
         cax = divider.append_axes("right", size="5%", pad=0.05)
 
         fig.colorbar(cb, cax=cax, ax=ax[2])
@@ -299,3 +323,5 @@ def mse(x, y):
 
 if __name__ == "__main__":
     future_frames_RNN("Catalyst", 108, 225, 228, 1)
+    mse_pred, ssim_pred, psnr_pred = image_metrics("output.png", "prediction.png", save_plot=False, show_plot=False)
+    print("Evaluation Complete")
