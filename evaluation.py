@@ -65,7 +65,7 @@ def plot_history1(his, model_id):
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.savefig(acc_file)
-
+    plt.clf()
     # summarize history for loss
     plt.plot(history['loss'])
     plt.plot(history['val_loss'])
@@ -79,43 +79,56 @@ def plot_history1(his, model_id):
 def get_frames(map_name, replay, range_x, range_y):
     proj_dir = FRAMES_DIR + map_name
     frames = []
-    for i in range(range_x, range_y+1):
+    for i in range(range_x, range_y):
         frame = map_name + "_" + str(replay) + "_frame_" + str(i) + ".png"
         # print(frame)
         im = Image.open(proj_dir + "\\" + frame)
         frame = np.array(im, dtype=np.uint8)
         frames.append(frame)
+    pred = []
+    pred.append(frames)
+    pred = np.array(pred, dtype=np.uint8)
 
-    frames = np.array(frames)
-
-    return frames
+    return pred, frames
 
 
-
-def future_frames_test(id, map, replay, range_x, range_y, future):
+def test_RNN(id, map, replay, lower_bound, upper_bound):
     model = load_json("CNN_model_" + str(id) + ".json", "weights_" + str(id) + ".h5")
 
-    # frames = "D:\\Starcraft 2 AI\\Input Frames\\Abyssal_Reef_0_frame_0.png"
-    # im = Image.open(frames)
+    frames = get_frames(map, replay, lower_bound, upper_bound)
+    prediction = model.predict(frames)
+    p = prediction[0]
+    save_prediction(p, id, map, replay, lower_bound, upper_bound)
+
+
+def future_frames_CNN(map, replay, range_x, range_y, future):
+    model = load_json("CNN_model_8_bp.json", "weights_8_ct.h5")
+
     frames = get_frames(map, replay, range_x, range_y)
-    # np_im = np.array(im, dtype=np.int32)
-    # np_arr = []
-    # np_arr.append(np_im)
-    # np.savez("to_predict.npz", x=np_arr)
-    # np_arr_2 = np.load("to_predict.npz")
-    # np_arr_2 = np_arr_2["x"]
     prediction = frames
-    for i in range(1, future):
+    for i in range(0, future):
         prediction = model.predict(prediction)
         p = prediction[0]
-        save_prediction(p, id, map, replay, i, i)
-        # prediction = prediction[0]  # np.resize(out, (128, 128, 3))
+        img = Image.fromarray(p.astype('uint8'))
+        img.save("D:\\Starcraft 2 AI\\Results\\Buildings\\Prediction_" + str(i) + ".png")
 
 
-    # save_prediction(prediction, id, map, replay, range_x, range_y)
-    # prediction = (prediction).astype(np.uint8)
-    # img = Image.fromarray(prediction)
-    # img.save("prediction_01a.png")
+def future_frames_RNN(map, replay, range_x, range_y, future):
+    model = load_json("CNN_model_9_CT7.json", "weights_9_CT7.h5")
+
+    frames, f = get_frames(map, replay, range_x, range_y)
+    prediction = frames
+    for i in range(0, future):
+        pred = model.predict(prediction)
+        p = pred[0]
+        img = Image.fromarray(p.astype('uint8'))
+        img.save("D:\\Starcraft 2 AI\\Results\\Future_Frames\\Prediction_" + str(i) + ".png")
+        f.pop()
+        f.append(p)
+        prediction = []
+        prediction.append(f)
+        prediction = np.array(prediction, dtype=np.uint8)
+
 
 def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
     model = load_json("CNN_model_" + str(model_id) + ".json", "weights_" + str(model_id) + ".h5")
@@ -139,19 +152,25 @@ def callback_predict(model, model_id, epoch_num):
     prediction = prediction[0]
 
     save_prediction(prediction, model_id, map_name, replay, lower_bound=lower_bound, upper_bound=upper_bound,
-                    epoch_num=epoch_num)
+                    epoch_num=epoch_num, y_true="input.png")
 
 
-def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
+def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=True, filename=None):
     if not os.path.exists(METRICS_DIR):
         os.mkdir(METRICS_DIR)
 
-    pred_img = Image.open(y_hat)
-    expected_img = Image.open(y)
-
-    pred_img = img_as_float(pred_img)
+    expected_img = Image.open(y_true)
     expected_img = img_as_float(expected_img)
-    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(13, 4))
+
+    pred_img = Image.open(y_pred)
+    pred_img = img_as_float(pred_img)
+    if x is not None:
+        fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(13, 8))
+        input_img = Image.open(x)
+        input_img = img_as_float(input_img)
+    else:
+        fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(13, 4))
+
     ax = axes.ravel()
 
     mse_base = mse(expected_img, expected_img)
@@ -165,29 +184,68 @@ def image_metrics(y, y_hat, show_plot=True, save_plot=False, filename=None):
 
     label = 'MSE: {:.2f}, SSIM: {:.2f}, PSNR: {:.2f}dB'
 
-    ax[0].imshow(pred_img, vmin=0, vmax=1)
-    ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
-    ax[0].set_title('Ground Truth')
+    if x is not None:
+        mse_input = mse(input_img, expected_img)
+        ssim_input = ssim(input_img, expected_img,
+                          data_range=pred_img.max() - pred_img.min(), multichannel=True)
+        psnr_input = psnr(input_img, expected_img)
 
-    ax[1].imshow(expected_img, vmin=0, vmax=1)
-    ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
-    ax[1].set_title('Predicted Output')
+        ax[0].imshow(input_img, vmin=0, vmax=1)
+        ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6] + "infinity")
+        ax[0].set_title('Input Image')
 
-    lum_img = get_pixel_error(pred_img, expected_img)
-    cb = ax[2].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
-    ax[2].set_title('Difference Heat Map')
-    divider = make_axes_locatable(ax[2])
+        ax[1].imshow(expected_img, vmin=0, vmax=1)
+        ax[1].set_xlabel(label.format(mse_input, ssim_input, psnr_input))
+        ax[1].set_title('Ground Truth')
 
-    cax = divider.append_axes("right", size="5%", pad=0.05)
+        lum_input_img = get_pixel_error(input_img, expected_img)
+        cb = ax[2].imshow(lum_input_img, vmin=0, vmax=1, cmap='jet')
+        ax[2].set_title('Input/Output Difference Heat Map')
+        divider = make_axes_locatable(ax[2])
 
-    fig.colorbar(cb, cax=cax, ax=ax[2])
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+
+        fig.colorbar(cb, cax=cax, ax=ax[2])
+        ax[3].imshow(expected_img, vmin=0, vmax=1)
+        ax[3].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6] + "infinity")
+        ax[3].set_title('Ground Truth')
+
+        ax[4].imshow(pred_img, vmin=0, vmax=1)
+        ax[4].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
+        ax[4].set_title('Predicted Output')
+
+        lum_img = get_pixel_error(pred_img, expected_img)
+        cb = ax[5].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
+        ax[5].set_title('Difference Heat Map')
+        divider = make_axes_locatable(ax[5])
+
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+
+        fig.colorbar(cb, cax=cax, ax=ax[2])
+    else:
+        ax[0].imshow(expected_img, vmin=0, vmax=1)
+        ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
+        ax[0].set_title('Ground Truth')
+
+        ax[1].imshow(pred_img, vmin=0, vmax=1)
+        ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
+        ax[1].set_title('Predicted Output')
+
+        lum_img = get_pixel_error(pred_img, expected_img)
+        cb = ax[2].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
+        ax[2].set_title('Difference Heat Map')
+        divider = make_axes_locatable(ax[2])
+
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+
+        fig.colorbar(cb, cax=cax, ax=ax[2])
     plt.tight_layout()
 
     if save_plot:
         if filename is not None:
             if filename[:-4] != ".png":
                 filename = filename + ".png"
-            save_file = os.path.join(METRICS_DIR, filename)
+            save_file = os.path.join("D:\\Starcraft 2 AI\\Results\\Future_Frames\\", filename)
 
             plt.savefig(save_file)
         else:
@@ -212,19 +270,27 @@ def get_pixel_error(img1, img2):
     return lum_img
 
 
-def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None):
+def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None, y_true=None):
     pred_dir = os.path.join(PREDICTION_DIR, "Model_" + str(model_id))
+    if not os.path.exists(PREDICTION_DIR):
+        os.mkdir(PREDICTION_DIR)
     if not os.path.exists(pred_dir):
         os.mkdir(pred_dir)
-
     prediction = prediction.astype(np.uint8)
     img = Image.fromarray(prediction)
     if epoch_num is None:
-        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
-                 str(upper_bound) + ".png")
+        save_path = os.path.join(pred_dir, "prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
+                                 + "-" + str(upper_bound) + ".png")
+
+        img.save(save_path)
     else:
-        img.save(pred_dir + "\\prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound) + "-" +
-                 str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
+        save_path = os.path.join(pred_dir, "prediction_" + map_name + "_" + str(replay) + "_" + str(lower_bound)
+                                 + "-" + str(upper_bound) + "_epoch_" + str(epoch_num) + ".png")
+
+        img.save(save_path)
+        if y_true is not None:
+            metric_filename = "Model_" + str(model_id) + "_Epoch_" + epoch_num
+            image_metrics(y_true, save_path, show_plot=False, save_plot=True, filename=metric_filename)
 
 
 def mse(x, y):
@@ -232,10 +298,4 @@ def mse(x, y):
 
 
 if __name__ == "__main__":
-    # model = load_json("CNN_model_01.json", "weights_01.h5")
-    single_test(15, "Acid_Plant", 141, 1500, 1500)
-    # single_test(10, "Acid_Plant", 141, 1496, 1498)
-    image_metrics("output.png", "prediction.png", save_plot=True)
-    print("Evaluation Complete")
-    # hst = load_history()
-    # plot_history(hst)
+    future_frames_RNN("Catalyst", 108, 225, 228, 1)
