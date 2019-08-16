@@ -34,7 +34,6 @@ def load_json(filename, weightname):
     print("Weights Loaded")
     return mod
 
-
 def plot_history(hst):
     plt.title("Loss / Mean Squared Error")
     plt.plot(hst.history["loss"], label="train")
@@ -43,11 +42,13 @@ def plot_history(hst):
     plt.show()
 
 
+# Loads history object fromm json file
 def load_history():
     history_file = os.path.join(WEIGHTS_DIR, "history_model_10.json")
     return json.load(open(history_file, 'r'))
 
 
+# creates plots from the history object
 def plot_history1(his, model_id):
     if not os.path.exists(PLOT_DIR):
         os.mkdir(PLOT_DIR)
@@ -139,7 +140,7 @@ def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
 
     save_prediction(prediction, model_id, map_name, replay, lower_bound, upper_bound)
 
-
+# Makes a single prediction
 def make_prediction(model, Y):
 
     Y_arr = []
@@ -151,6 +152,7 @@ def make_prediction(model, Y):
     return prediction
 
 
+# callback method that makes predictions during training
 def callback_predict(model, model_id, epoch_num):
     replay = 141
     lower_bound = 500
@@ -165,6 +167,7 @@ def callback_predict(model, model_id, epoch_num):
                     epoch_num=epoch_num, y_true="input.png")
 
 
+# creates plots comparing the prediction with the ground truth image and diplays metrics
 def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filename=None, input_array=False):
 
     if not os.path.exists(METRICS_DIR):
@@ -275,6 +278,7 @@ def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filen
     return mse_pred, ssim_pred, psnr_pred
 
 
+# returns luminosity value to be used for the calculation of SSIM
 def get_pixel_error(img1, img2):
 
     # Calculate the absolute difference on each channel separately
@@ -288,6 +292,7 @@ def get_pixel_error(img1, img2):
     return lum_img
 
 
+# saves the prediction to a png file
 def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper_bound=0, epoch_num=None, y_true=None):
     pred_dir = os.path.join(PREDICTION_DIR, "Model_" + str(model_id))
     if not os.path.exists(PREDICTION_DIR):
@@ -311,6 +316,7 @@ def save_prediction(prediction, model_id, map_name, replay, lower_bound=0, upper
             image_metrics(y_true, save_path, show_plot=False, save_plot=True, filename=metric_filename)
 
 
+# calculates mse
 def mse(x, y):
     return np.linalg.norm(x - y)
 

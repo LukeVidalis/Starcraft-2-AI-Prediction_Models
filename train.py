@@ -12,6 +12,7 @@ from callbacks import CallbackPred
 import tensorflow as tf
 from keras import backend as k
 from evaluation import plot_history1
+
 # Parameters
 model_id = 13
 epochs_num = 100
@@ -113,10 +114,6 @@ def train_model(model, x, Y):
 
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
-
-    # hst = model.fit(x=x, y=Y, batch_size=batch_size, epochs=epochs_num, verbose=2, callbacks=callbacks,
-    #                 validation_split=val_split, validation_data=None, shuffle=True, class_weight=None,
-    #                 sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 
     hst = model.fit_generator(training_generator, steps_per_epoch=steps_per_epoch, epochs=epochs_num, verbose=2,
                               callbacks=callbacks, validation_data=testing_generator,
