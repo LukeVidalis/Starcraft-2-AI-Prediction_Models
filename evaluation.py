@@ -127,6 +127,17 @@ def single_test(model_id, map_name, replay, lower_bound=0, upper_bound=0):
     save_prediction(prediction, model_id, map_name, replay, lower_bound, upper_bound)
 
 
+def make_prediction(model, Y):
+
+    Y_arr = []
+    Y_arr.append(Y)
+    Y_arr = np.array(Y_arr)
+    prediction = model.predict(Y_arr)
+    prediction = prediction[0]
+
+    return prediction
+
+
 def callback_predict(model, model_id, epoch_num):
     replay = 141
     lower_bound = 500
@@ -141,23 +152,27 @@ def callback_predict(model, model_id, epoch_num):
                     epoch_num=epoch_num, y_true="input.png")
 
 
-def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filename=None):
+def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filename=None, input_array=False):
     if not os.path.exists(METRICS_DIR):
         os.mkdir(METRICS_DIR)
+    if not input_array:
+        expected_img = Image.open(y_true)
+        expected_img = img_as_float(expected_img)
 
-    expected_img = Image.open(y_true)
-    expected_img = img_as_float(expected_img)
-
-    pred_img = Image.open(y_pred)
-    pred_img = img_as_float(pred_img)
-    if x is not None:
-        fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(13, 8))
-        input_img = Image.open(x)
-        input_img = img_as_float(input_img)
+        pred_img = Image.open(y_pred)
+        pred_img = img_as_float(pred_img)
     else:
-        fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(13, 4))
+        expected_img = y_true
+        pred_img = y_pred
+    if save_plot or show_plot:
+        if x is not None:
+            fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(13, 8))
+            input_img = Image.open(x)
+            input_img = img_as_float(input_img)
+        else:
+            fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(13, 4))
 
-    ax = axes.ravel()
+        ax = axes.ravel()
 
     mse_base = mse(expected_img, expected_img)
     ssim_base = ssim(expected_img, expected_img, data_range=expected_img.max() - expected_img.min(), multichannel=True)
@@ -166,79 +181,80 @@ def image_metrics(y_true, y_pred, x=None, show_plot=True, save_plot=False, filen
     mse_pred = mse(pred_img, expected_img)
     ssim_pred = ssim(pred_img, expected_img,
                      data_range=pred_img.max() - pred_img.min(), multichannel=True)
-    psnr_pred = psnr(pred_img, expected_img)
+    psnr_pred = psnr(pred_img, expected_img, data_range=pred_img.max() - pred_img.min())
 
     label = 'MSE: {:.2f}, SSIM: {:.2f}, PSNR: {:.2f}dB'
+    if save_plot or show_plot:
 
-    if x is not None:
-        mse_input = mse(input_img, expected_img)
-        ssim_input = ssim(input_img, expected_img,
-                          data_range=pred_img.max() - pred_img.min(), multichannel=True)
-        psnr_input = psnr(input_img, expected_img)
+        if x is not None:
+            mse_input = mse(input_img, expected_img)
+            ssim_input = ssim(input_img, expected_img,
+                              data_range=pred_img.max() - pred_img.min(), multichannel=True)
+            psnr_input = psnr(input_img, expected_img)
 
-        ax[0].imshow(input_img, vmin=0, vmax=1)
-        ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6] + "infinity")
-        ax[0].set_title('Input Image')
+            ax[0].imshow(input_img, vmin=0, vmax=1)
+            ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6] + "infinity")
+            ax[0].set_title('Input Image')
 
-        ax[1].imshow(expected_img, vmin=0, vmax=1)
-        ax[1].set_xlabel(label.format(mse_input, ssim_input, psnr_input))
-        ax[1].set_title('Ground Truth')
+            ax[1].imshow(expected_img, vmin=0, vmax=1)
+            ax[1].set_xlabel(label.format(mse_input, ssim_input, psnr_input))
+            ax[1].set_title('Ground Truth')
 
-        lum_input_img = get_pixel_error(input_img, expected_img)
-        cb = ax[2].imshow(lum_input_img, vmin=0, vmax=1, cmap='jet')
-        ax[2].set_title('Input/Output Difference Heat Map')
-        divider = make_axes_locatable(ax[2])
+            lum_input_img = get_pixel_error(input_img, expected_img)
+            cb = ax[2].imshow(lum_input_img, vmin=0, vmax=1, cmap='jet')
+            ax[2].set_title('Input/Output Difference Heat Map')
+            divider = make_axes_locatable(ax[2])
 
-        cax = divider.append_axes("right", size="5%", pad=0.05)
+            cax = divider.append_axes("right", size="5%", pad=0.05)
 
-        fig.colorbar(cb, cax=cax, ax=ax[2])
-        ax[3].imshow(expected_img, vmin=0, vmax=1)
-        ax[3].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6] + "infinity")
-        ax[3].set_title('Ground Truth')
+            fig.colorbar(cb, cax=cax, ax=ax[2])
+            ax[3].imshow(expected_img, vmin=0, vmax=1)
+            ax[3].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6] + "infinity")
+            ax[3].set_title('Ground Truth')
 
-        ax[4].imshow(pred_img, vmin=0, vmax=1)
-        ax[4].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
-        ax[4].set_title('Predicted Output')
+            ax[4].imshow(pred_img, vmin=0, vmax=1)
+            ax[4].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
+            ax[4].set_title('Predicted Output')
 
-        lum_img = get_pixel_error(pred_img, expected_img)
-        cb = ax[5].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
-        ax[5].set_title('Difference Heat Map')
-        divider = make_axes_locatable(ax[5])
+            lum_img = get_pixel_error(pred_img, expected_img)
+            cb = ax[5].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
+            ax[5].set_title('Difference Heat Map')
+            divider = make_axes_locatable(ax[5])
 
-        cax = divider.append_axes("right", size="5%", pad=0.05)
+            cax = divider.append_axes("right", size="5%", pad=0.05)
 
-        fig.colorbar(cb, cax=cax, ax=ax[2])
-    else:
-        ax[0].imshow(expected_img, vmin=0, vmax=1)
-        ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
-        ax[0].set_title('Ground Truth')
-
-        ax[1].imshow(pred_img, vmin=0, vmax=1)
-        ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
-        ax[1].set_title('Predicted Output')
-
-        lum_img = get_pixel_error(pred_img, expected_img)
-        cb = ax[2].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
-        ax[2].set_title('Difference Heat Map')
-        divider = make_axes_locatable(ax[2])
-
-        cax = divider.append_axes("right", size="5%", pad=0.05)
-
-        fig.colorbar(cb, cax=cax, ax=ax[2])
-    plt.tight_layout()
-
-    if save_plot:
-        if filename is not None:
-            if filename[:-4] != ".png":
-                filename = filename + ".png"
-            save_file = os.path.join(METRICS_DIR, filename)
-
-            plt.savefig(save_file)
+            fig.colorbar(cb, cax=cax, ax=ax[2])
         else:
-            save_file = os.path.join(METRICS_DIR, "metrics_plot_"+datetime.today().strftime('%Y-%m-%d %H_%M_%S')+".png")
-            plt.savefig(save_file)
-    if show_plot:
-        plt.show()
+            ax[0].imshow(expected_img, vmin=0, vmax=1)
+            ax[0].set_xlabel(label.format(mse_base, ssim_base, psnr_base)[:-6]+"infinity")
+            ax[0].set_title('Ground Truth')
+
+            ax[1].imshow(pred_img, vmin=0, vmax=1)
+            ax[1].set_xlabel(label.format(mse_pred, ssim_pred, psnr_pred))
+            ax[1].set_title('Predicted Output')
+
+            lum_img = get_pixel_error(pred_img, expected_img)
+            cb = ax[2].imshow(lum_img, vmin=0, vmax=1, cmap='jet')
+            ax[2].set_title('Difference Heat Map')
+            divider = make_axes_locatable(ax[2])
+
+            cax = divider.append_axes("right", size="5%", pad=0.05)
+
+            fig.colorbar(cb, cax=cax, ax=ax[2])
+        plt.tight_layout()
+
+        if save_plot:
+            if filename is not None:
+                if filename[:-4] != ".png":
+                    filename = filename + ".png"
+                save_file = os.path.join(METRICS_DIR, filename)
+
+                plt.savefig(save_file)
+            else:
+                save_file = os.path.join(METRICS_DIR, "metrics_plot_"+datetime.today().strftime('%Y-%m-%d %H_%M_%S')+".png")
+                plt.savefig(save_file)
+        if show_plot:
+            plt.show()
 
     return mse_pred, ssim_pred, psnr_pred
 
@@ -286,7 +302,7 @@ def mse(x, y):
 if __name__ == "__main__":
     # model = load_json("CNN_model_01.json", "weights_01.h5")
     # single_test(15, "Acid_Plant", 141, 1500, 1500)
-    # single_test(10, "Acid_Plant", 141, 1496, 1498)
+    single_test(100, "Catalyst", 105, 1200, 1201)
     mse_pred, ssim_pred, psnr_pred = image_metrics("output.png", "prediction.png", save_plot=False, show_plot=False)
     print("Evaluation Complete")
 

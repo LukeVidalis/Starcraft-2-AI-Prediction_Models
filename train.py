@@ -108,9 +108,8 @@ def train_model(model, x, Y):
     steps_per_epoch = math.ceil(len(x[:split_id])/batch_size)
     val_steps_per_epoch = math.ceil(len(x[split_id:])/batch_size)
 
-    callbacks = [LearningRateScheduler(lr_schedule()), ModelCheckpoint(filepath=model_checkpoint, monitor='val_loss',
-                                                                       verbose=1, save_best_only=True),
-                 CallbackPred(period=10, model_id=model_id)]
+    callbacks = [ModelCheckpoint(filepath=model_checkpoint, monitor='val_loss',
+                                 verbose=1, save_best_only=True), CallbackPred(period=10, model_id=model_id)]
 
     print("Epochs: "+str(epochs_num)+"\nBatch Size: "+str(batch_size))
     start = time.time()
